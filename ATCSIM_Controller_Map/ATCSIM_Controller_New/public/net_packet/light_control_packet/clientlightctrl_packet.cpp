@@ -1,0 +1,4 @@
+#include "clientlightctrl_packet.h"
+
+PKT_IMPLEMENT_DYNCREATE(ClientLightCtrlPacket);
+PKT_IMPLEMENT_DYNCREATE(ClientLightCtrlPacketACK2VIS);

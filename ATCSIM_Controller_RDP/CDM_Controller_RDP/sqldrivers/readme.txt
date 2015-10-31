@@ -1,0 +1,9 @@
+含以下8个文件，解压后复制到$QT_DIR\plugins\sqldrivers[如C:\Qt\4.6.3\plugins\sqldrivers]即可：
+qsqloci4.dll
+qsqloci4.exp
+qsqloci4.lib
+qsqlocid4.dll
+qsqlocid4.exp
+qsqlocid4.ilk
+qsqlocid4.lib
+qsqlocid4.pdb

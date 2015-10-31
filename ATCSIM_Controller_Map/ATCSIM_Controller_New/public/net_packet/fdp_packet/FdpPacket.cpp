@@ -1,0 +1,18 @@
+//FdpPacket实现文件
+#include "FdpPacket.h"
+
+PKT_IMPLEMENT_DYNCREATE(FlightPlanHandoverPacket);
+PKT_IMPLEMENT_DYNCREATE(ControllerTransferPacket);
+PKT_IMPLEMENT_DYNCREATE(SectorAisgnPacket);
+PKT_IMPLEMENT_DYNCREATE(InitSectorAisgnPacket);
+PKT_IMPLEMENT_DYNCREATE(InitPilotAisgnPacket);
+PKT_IMPLEMENT_DYNCREATE(PilotAisgnPacket);
+PKT_IMPLEMENT_DYNCREATE(PilotHandlePlanePacket);
+PKT_IMPLEMENT_DYNCREATE(FlightPlanPacket);
+PKT_IMPLEMENT_DYNCREATE(ADDMODIFYFlightPlanPacket);
+PKT_IMPLEMENT_DYNCREATE(FlightPlanDeletedPacket);
+PKT_IMPLEMENT_DYNCREATE(HoldFlightPlanPacket);
+PKT_IMPLEMENT_DYNCREATE(FlightPlanCouplePacket);
+PKT_IMPLEMENT_DYNCREATE(TagFlightPlanPacket);
+PKT_IMPLEMENT_DYNCREATE(FlightPlanCFLPacket);
+PKT_IMPLEMENT_DYNCREATE(SectorAisgnPlanePacket);

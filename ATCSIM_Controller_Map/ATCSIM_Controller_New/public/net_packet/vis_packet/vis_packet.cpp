@@ -1,0 +1,8 @@
+#include "vis_packet.h"
+#include <memory.h>
+
+
+PKT_IMPLEMENT_DYNCREATE(FramePacket);
+
+//////////////////////////////////////////////////////////////////////////
+
