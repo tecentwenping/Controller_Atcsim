@@ -157,15 +157,21 @@ int NetDataDispenser::CompuAngle( int iTraceID )
 		theData::instance().GetAircraftTrace(fplTraces);
 		hmFplTraces::iterator Iter2=fplTraces.find(iTraceID);
 		if(Iter2!=fplTraces.end()){
+
+			std::vector<PointPtr>& HistoryPos=Iter2->second->m_vHistoryPos;
+			
 			double dCurX=Iter2->second->m_fAbsX;
 			double dCurY=Iter2->second->m_fAbsY;
 
-			WPointF wNextPos=deqTracePoint.front();
-			double dNextX=wNextPos.rx();
-			double dNextY=wNextPos.ry();
+			double dHistoryX=0.0,dHistoryY=0.0;
+			if(!HistoryPos.empty()){
+				
+				dHistoryX=Iter2->second->m_vHistoryPos.back();
+				dHistoryY=Iter2->second->m_vHistoryPos.back();
+			}
 
-			double dTempx=dCurX-dNextX;
-			double dTempy=dCurY-dNextY;
+			double dTempx=dCurX-dHistoryX;
+			double dTempy=dCurY-dHistoryY;
 
 			double root=sqrt(dTempx*dTempx+dTempy*dTempy);
 
@@ -218,54 +224,38 @@ void  NetDataDispenser::_CollisionDectect_Aux( int iTraceID1,int iTraceID2 )
            
 			//距离缩小了,说明两个航空器在不断的缩进，Aircraft1在后，Aircraft2在前
 			if(newDistance<currentDistance){
-				
-				std::string wake1=aircraftInfo1.sWake;
-				std::string wake2=aircraftInfo2.sWake;
-				int wakedistance=_CompuWakeDistance(wake1,wake2);
-				aircraftInfo2.dProtectDistance=wakedistance;
-				aircraftInfo2.dSafeDistance+=wakedistance;
-
 				if(currentDistance<aircraftInfo2.dSafeDistance){
 					  aircraftInfo1.bStop=true;//冲突距离以内，后面的飞行器停等
 					  m_aircrftTraceToDispenserVec[iTraceID1]=-1;
 					  
 				}
 			}else{//距离变大了，这时Aircraft1在前，Aircraft2在后,保护层距离
-				std::string wake1=aircraftInfo2.sWake;
-				std::string wake2=aircraftInfo1.sWake;
-				int wakedistance=_CompuWakeDistance(wake1,wake2);
-				aircraftInfo1.dProtectDistance=wakedistance;
-				aircraftInfo1.dSafeDistance+=wakedistance;
-
 				if(currentDistance<aircraftInfo1.dSafeDistance){
-
 					aircraftInfo2.bStop=true;//冲突距离以内，后面的飞行器停等
 					m_aircrftTraceToDispenserVec[iTraceID2]=-1;
 
-				}
-					
-
-			}
+				}//if
+			}//else
 		}
 	}
 }
 
-int NetDataDispenser::_CompuWakeDistance( std::string wake1,std::string wake2 )
-{
-	std::string str=wake1+wake2;
-    int wakeDistance=0;
-	if(str=="HH")  wakeDistance=PublicDataStruct::HH1;
-	else if(str=="HM") wakeDistance=PublicDataStruct::HM1;
-	else if(str=="HS") wakeDistance=PublicDataStruct::HS1;
-	else if(str=="MH") wakeDistance=PublicDataStruct::MH1;
-	else if(str=="MM")wakeDistance=PublicDataStruct::MM1;
-	else if(str=="MS")wakeDistance=PublicDataStruct::MS1;
-	else if(str=="SH")wakeDistance=PublicDataStruct::SH1;
-	else if(str=="SM")wakeDistance=PublicDataStruct::SM1;
-	else if(str=="SS")wakeDistance=PublicDataStruct::SS1;
-
-	return wakeDistance;
-}
+//int NetDataDispenser::_CompuWakeDistance( std::string wake1,std::string wake2 )
+//{
+//	std::string str=wake1+wake2;
+//    int wakeDistance=0;
+//	if(str=="HH")  wakeDistance=PublicDataStruct::HH1;
+//	else if(str=="HM") wakeDistance=PublicDataStruct::HM1;
+//	else if(str=="HS") wakeDistance=PublicDataStruct::HS1;
+//	else if(str=="MH") wakeDistance=PublicDataStruct::MH1;
+//	else if(str=="MM")wakeDistance=PublicDataStruct::MM1;
+//	else if(str=="MS")wakeDistance=PublicDataStruct::MS1;
+//	else if(str=="SH")wakeDistance=PublicDataStruct::SH1;
+//	else if(str=="SM")wakeDistance=PublicDataStruct::SM1;
+//	else if(str=="SS")wakeDistance=PublicDataStruct::SS1;
+//
+//	return wakeDistance;
+//}
 
 void NetDataDispenser::_DisPenserTraceToClient()
 {

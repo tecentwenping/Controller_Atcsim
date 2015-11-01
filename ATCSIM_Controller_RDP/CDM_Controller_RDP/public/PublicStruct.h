@@ -687,6 +687,13 @@ namespace PublicDataStruct
 		bool   bStop;
 		Aircraft(){
 			bStop=false;
+			if(sWake=="H")
+				dProtectDistance=HS1;
+			else if(sWake=="M")
+				dProtectDistance=MS1;
+			else if(sWake=="S")
+				dProtectDistance=SS1;
+			dSafeDistance+=dProtectDistance;
 		}
 	};
 	////////////////////////////////////////////////////////////////////////////////

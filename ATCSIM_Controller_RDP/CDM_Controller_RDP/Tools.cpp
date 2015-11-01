@@ -22,3 +22,8 @@ double CTools::DistancePoint2Point( WPointF p1,WPointF p2 )
 	double distance=sqrt(dX*dX+dY*dY);
 	return distance;
 }
+
+int CTools::CompuTimeDiff( std::string time )
+{
+
+}

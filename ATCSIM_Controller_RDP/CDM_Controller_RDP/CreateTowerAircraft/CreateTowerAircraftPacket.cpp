@@ -62,7 +62,9 @@ void CreateTowerAircraftPacket::slot_RecvPlanAircraftPacket()
 			FlyPlanFromDBTemp = value;
 			CreateTowerFlightPlan(FlyPlanFromDBTemp,towerFlightPlanTemp);//组件飞行计划
 			CreateTowerObjPlan(towerFlightPlanTemp,towerObjectPlanTemp);//组建目标计划
-			CreateTowerAircraft(towerFlightPlanTemp,towerObjectPlanTemp);//组件飞机包
+			CreateTowerAircraft(towerFlightPlanTemp,towerObjectPlanTemp);//组件飞机包 
+	
+
 		}
 	}
 }
@@ -79,17 +81,17 @@ void CreateTowerAircraftPacket::CreateTowerObjPlan(PublicDataStruct::TowerFlight
 		break;
 		//进场计划
 	case  PublicDataStruct::CDM_ARR_PLAN:
-		switch(m_enumTerminate_T)
-		{
-		case PublicDataStruct::T1_TERMINATE://ra1为进入点
+		//switch(m_enumTerminate_T)
+		//{
+		//case PublicDataStruct::T1_TERMINATE://ra1为进入点
 			towerObjectPlanStruct.dLongtitude = m_initialLongtitue_T1;//出现的经度（单位：弧度）
 			towerObjectPlanStruct.dLatitude = m_initilaLatitue_T1;//出现的纬度（单位：弧度）
-			break;
-		case PublicDataStruct::T2_TERMINATE://re1为进入点
-			towerObjectPlanStruct.dLongtitude = m_initialLongtitue_T2;//出现的经度（单位：弧度）
-			towerObjectPlanStruct.dLatitude =  m_initilaLatitue_T2;//出现的纬度（单位：弧度）
-			break;
-		}
+		//	break;
+		//case PublicDataStruct::T2_TERMINATE://re1为进入点
+		//	towerObjectPlanStruct.dLongtitude = m_initialLongtitue_T2;//出现的经度（单位：弧度）
+		//	towerObjectPlanStruct.dLatitude =  m_initilaLatitue_T2;//出现的纬度（单位：弧度）
+		//	break;
+	//	}
 		break;
 	}
 	//创建目标计划
@@ -104,22 +106,23 @@ void CreateTowerAircraftPacket::CreateTowerObjPlan(PublicDataStruct::TowerFlight
 	strcpy( towerObjectPlanStruct.strModelType,"B737_300");
 	strcpy( towerObjectPlanStruct.strRegNum,towerFlightPlanStruct.sFlightNum);
 	towerObjectPlanStruct.bEngineStart = true;//引擎不开启
+
 }
 void CreateTowerAircraftPacket::CreateTowerFlightPlan(PublicDataStruct::SFlyPlanFromDB& flyPlanFromDB,
 													  PublicDataStruct::TowerFlightPlanStruct& towerFlightPlanStruct )
 {
-	//航班号(航班号用于确定飞机的停机位)
-	QString sFlightNum = QString::fromStdString(flyPlanFromDB.sFlyPlanNum);
-	QRegExp rx("(3U)");//3U是川航的航班
-	//确定航站楼，川航的航班默认是放在T1航站楼
-	bool isMatch = sFlightNum.contains(rx);
-	if(isMatch)
-	{
-		m_enumTerminate_T = PublicDataStruct::T1_TERMINATE;
-	}else
-	{
-		m_enumTerminate_T = PublicDataStruct::T2_TERMINATE;
-	}
+	////航班号(航班号用于确定飞机的停机位)
+	//QString sFlightNum = QString::fromStdString(flyPlanFromDB.sFlyPlanNum);
+	//QRegExp rx("(3U)");//3U是川航的航班
+	////确定航站楼，川航的航班默认是放在T1航站楼
+	//bool isMatch = sFlightNum.contains(rx);
+	//if(isMatch)
+	//{
+	//	m_enumTerminate_T = PublicDataStruct::T1_TERMINATE;
+	//}else
+	//{
+	//	m_enumTerminate_T = PublicDataStruct::T2_TERMINATE;
+	//}
 	//将从数据库读取的飞行计划转换为飞行计划
 	ConvertFlyPlanFromDBToTowerFlightPlan(flyPlanFromDB,towerFlightPlanStruct);
 }
