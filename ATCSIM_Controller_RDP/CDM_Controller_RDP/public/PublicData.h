@@ -80,6 +80,7 @@ public:
 	void					GetCurrentFlyPlan(std::vector<QString>& vecCurFLyPlan);
 
 	//////////////////////////////////////////////////////////////////////////////////
+	void				GetPathInformation_New(MapPath&,int flag);
 
 
 };

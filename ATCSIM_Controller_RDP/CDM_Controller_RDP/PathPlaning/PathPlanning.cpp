@@ -108,9 +108,51 @@ void CPathPlanning::SettAircraftTraceDefaulValue( AircraftTrace& vAircraftTrace 
 	vAircraftTrace.m_byAtt = 0;
 	vAircraftTrace.eStateType = PublicDataStruct::STAT_TAXING;
 	vAircraftTrace.m_fPRLTime = 3;
-	vAircraftTrace.m_nHistoryNum = 5000;
+	//vAircraftTrace.m_nHistoryNum = 5000;
 	vAircraftTrace.m_bShowLabel = true;
 	vAircraftTrace.m_iCount = 3;
 	vAircraftTrace.m_eCurSignalType = PublicDataStruct::SIGNAL_COMBINED;
 	vAircraftTrace.m_nHistoryNum = 0;
+
+	//////////////////////////////////////////////////////////////////////
+	/*
+	 目前机型全部为B733，后期改动的时候需要根据双流机场的飞行计划中指定的
+	 航班来确定机型，机型的各项参数参照PublicStruct.h文件
+	*/
+	/////////////////////////////////////////////////////////////////////
+	vAircraftTrace.m_aircraftInfo.dMass=52550;//质量
+	vAircraftTrace.m_aircraftInfo.dLength=32.18;//机身长度
+	vAircraftTrace.m_aircraftInfo.dWingSpan=28.9;//翼展长度
+	vAircraftTrace.m_aircraftInfo.sWake="M";//中型机
+	vAircraftTrace.m_aircraftInfo.sType="B733";
+	vAircraftTrace.m_aircraftInfo.dCurTaxSpd=vAircraftTrace.m_dGAS;
+
+
+}
+void CPathPlanning::_SetSafeDistance( AircraftTrace& aircraft )
+{
+	 /*
+	 告警层:L'=V*t+m*V*V/2(f1+f2+f3)
+	 V:当前速度
+	 t:反应时间，设定为5s
+	 m:航空器质量
+	 f1:刹车力，为质量的40%
+	 f2:反推力，质量的40%
+	 f3：空气阻力，为质量的10%
+	 中小型飞机，反推力和空气阻力为0
+	*/
+	double dSpd=aircraft.m_aircraftInfo.dCurTaxSpd;
+	double dTime=PublicDataStruct::RESPONSETIME;
+	double dMass=aircraft.m_aircraftInfo.dMass;
+	double F1=dMass*0.4;
+	double F2=0.0,F3=0.0;
+	if(aircraft.m_aircraftInfo.sWake=="H"){
+		F2=dMass*0.4;
+		F3=dMass*0.1;
+	}
+	double dAlarmDistance=dSpd*dTime+(dMass*dSpd*dSpd)/(F1+F2+F3)*0.5;
+
+	aircraft.m_aircraftInfo.dAlarmDistance=dAlarmDistance;
+	aircraft.m_aircraftInfo.dBaseDistance=aircraft.m_aircraftInfo.dLength;
+	aircraft.m_aircraftInfo.dSafeDistance=aircraft.m_aircraftInfo.dAlarmDistance+aircraft.m_aircraftInfo.dBaseDistance;
 }

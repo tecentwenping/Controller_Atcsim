@@ -10,6 +10,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <QTime>
+#include <algorithm>
 const double PI=3.1415926;
 NetDataDispenser::NetDataDispenser():m_bInitDataSucess(false)
 {  
@@ -94,34 +95,7 @@ void NetDataDispenser::AircraftTraceToDispenser()
 	}
 }
 
-void NetDataDispenser::_SetSafeDistance( PublicDataStruct::Aircraft& aircraft )
-{
-	 /*
-	 告警层:L'=V*t+m*V*V/2(f1+f2+f3)
-	 V:当前速度
-	 t:反应时间，设定为5s
-	 m:航空器质量
-	 f1:刹车力，为质量的40%
-	 f2:反推力，质量的40%
-	 f3：空气阻力，为质量的10%
-	 中小型飞机，反推力和空气阻力为0
-	*/
-	double dSpd=aircraft.dCurTaxSpd;
-	double dTime=PublicDataStruct::RESPONSETIME;
-	double dMass=aircraft.dMass;
-	double F1=aircraft.dMass*0.4;
-	double F2=0.0,F3=0.0;
-	if(aircraft.sWake=="H"){
-		F2=aircraft.dMass*0.4;
-		F3=aircraft.dMass*0.1;
-	}
-	double dAlarmDistance=dSpd*dTime+(dMass*dSpd*dSpd)/(F1+F2+F3)*0.5;
 
-	aircraft.dAlarmDistance=dAlarmDistance;
-	aircraft.dBaseDistance=aircraft.dLength;
-	aircraft.dSafeDistance=aircraft.dAlarmDistance+aircraft.dBaseDistance;
-
-}
 
 void NetDataDispenser::_CollectionDetect()
 {
@@ -134,6 +108,7 @@ void NetDataDispenser::_CollectionDetect()
    //航空器之间有冲突，则要采取停等策略
    for(unsigned int i=0;i!=m_aircrftTraceToDispenserVec.size()-1;++i){
 	   unsigned int j=1+1;
+	   //计算角度
 	   int iAngle1=CompuAngle(m_aircrftTraceToDispenserVec[i]);
 	   while(j++!=m_aircrftTraceToDispenserVec.size()){
 		   int iAngle2=CompuAngle(m_aircrftTraceToDispenserVec[j]);
@@ -158,7 +133,7 @@ int NetDataDispenser::CompuAngle( int iTraceID )
 		hmFplTraces::iterator Iter2=fplTraces.find(iTraceID);
 		if(Iter2!=fplTraces.end()){
 
-			std::vector<PointPtr>& HistoryPos=Iter2->second->m_vHistoryPos;
+			std::vector< boost::shared_ptr<WPointF> > HistoryPos=Iter2->second->m_vHistoryPos;
 			
 			double dCurX=Iter2->second->m_fAbsX;
 			double dCurY=Iter2->second->m_fAbsY;
@@ -166,8 +141,8 @@ int NetDataDispenser::CompuAngle( int iTraceID )
 			double dHistoryX=0.0,dHistoryY=0.0;
 			if(!HistoryPos.empty()){
 				
-				dHistoryX=Iter2->second->m_vHistoryPos.back();
-				dHistoryY=Iter2->second->m_vHistoryPos.back();
+				dHistoryX=Iter2->second->m_vHistoryPos.back().get()->rx();
+				dHistoryY=Iter2->second->m_vHistoryPos.back().get()->ry();
 			}
 
 			double dTempx=dCurX-dHistoryX;
@@ -226,53 +201,34 @@ void  NetDataDispenser::_CollisionDectect_Aux( int iTraceID1,int iTraceID2 )
 			if(newDistance<currentDistance){
 				if(currentDistance<aircraftInfo2.dSafeDistance){
 					  aircraftInfo1.bStop=true;//冲突距离以内，后面的飞行器停等
-					  m_aircrftTraceToDispenserVec[iTraceID1]=-1;
+					 // m_aircrftTraceToDispenserVec[iTraceID1]=-1;
+					  m_aircraftStopVec.push_back(iTraceID1);
 					  
 				}
 			}else{//距离变大了，这时Aircraft1在前，Aircraft2在后,保护层距离
 				if(currentDistance<aircraftInfo1.dSafeDistance){
 					aircraftInfo2.bStop=true;//冲突距离以内，后面的飞行器停等
-					m_aircrftTraceToDispenserVec[iTraceID2]=-1;
+					//m_aircrftTraceToDispenserVec[iTraceID2]=-1;
+					m_aircraftStopVec.push_back(iTraceID2);
 
 				}//if
 			}//else
 		}
 	}
 }
-
-//int NetDataDispenser::_CompuWakeDistance( std::string wake1,std::string wake2 )
-//{
-//	std::string str=wake1+wake2;
-//    int wakeDistance=0;
-//	if(str=="HH")  wakeDistance=PublicDataStruct::HH1;
-//	else if(str=="HM") wakeDistance=PublicDataStruct::HM1;
-//	else if(str=="HS") wakeDistance=PublicDataStruct::HS1;
-//	else if(str=="MH") wakeDistance=PublicDataStruct::MH1;
-//	else if(str=="MM")wakeDistance=PublicDataStruct::MM1;
-//	else if(str=="MS")wakeDistance=PublicDataStruct::MS1;
-//	else if(str=="SH")wakeDistance=PublicDataStruct::SH1;
-//	else if(str=="SM")wakeDistance=PublicDataStruct::SM1;
-//	else if(str=="SS")wakeDistance=PublicDataStruct::SS1;
-//
-//	return wakeDistance;
-//}
-
 void NetDataDispenser::_DisPenserTraceToClient()
 {
 	if(!m_aircrftTraceToDispenserVec.empty()){
 
 		std::vector<int>::iterator Iter=m_aircrftTraceToDispenserVec.begin();
-
-		
 		while(Iter++!=m_aircrftTraceToDispenserVec.end()){
-            
-			if(-1==*Iter)//不需要发送位置更新
-				continue;
+
+			std::vector<int>::iterator isFind=std::find(m_aircraftStopVec.begin(),m_aircraftStopVec.end(),*Iter);
+			if(isFind==m_aircraftStopVec.end())//需要停等
+			    continue;
 			std::deque<WPointF> TracePoint;
 			theData::instance().GetAircraftTracePoint1(*Iter,TracePoint);
-
 			WPointF postion=TracePoint.front();
-
 			hmFplTraces::iterator traceIter=m_hmTrace.find(*Iter);
 			if(traceIter!=m_hmTrace.end()){
 
@@ -283,15 +239,12 @@ void NetDataDispenser::_DisPenserTraceToClient()
 				pTrace->m_nHistoryNum++;//历史轨迹点
 				pTrace->m_vHistoryPos.push_back(boost::make_shared<WPointF>(postion.rx(), postion.ry()));
 				theApp::instance().GetNetManagerPtr()->GetNetProcessPtr()->SendAircraftTrace(*pTrace);
-				//保护层的距离是随着场面状体的改变而变的，所以发送完航迹后，需要将这个保护距离去掉
-				pTrace->m_aircraftInfo.dSafeDistance -=pTrace->m_aircraftInfo.dProtectDistance;
 				TracePoint.pop_front();//删除队头	
 			}//if
 
 		}//while
 		
 	}//if
-	m_aircrftTraceToDispenserVec.clear();
-
+	m_aircraftStopVec.clear();
 }
 

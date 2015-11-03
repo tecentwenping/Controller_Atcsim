@@ -14,6 +14,7 @@
 #define M_PI       3.14159265358979323846
 namespace PublicDataStruct
 {
+	const int   BUFFERSZE=4096;
 	const int	SENDFLIGHTPLANUDPPORT	= 10000;//发送飞行计划的UDP端口号
 	const int	RECVFLIGHTPLANIDPORT	= 9902; //接收航班ID的UDP端口号
 	const int	SENDCOMMANDUDPPORT		= 9901; //发送命令的UDP端口号
@@ -339,6 +340,23 @@ namespace PublicDataStruct
 		char			sArrivalTime[64];		        /* 预计到达时间*/
 		char			sSidName[64];                   /*离场程序名称*/
 		TowerAirRoadStruct	sAirRoadPoint;
+
+
+		std::string toString(){
+
+			char* buf=new char[BUFFERSZE];
+			memset(buf,0,BUFFERSZE);
+			sprintf(buf,"TowerFlightPlanStruct:[FlightPlanId:%d;FlightNum:%s;SSRCode:%s;RVSM:%d;FlyPlanType:%d;SectorName:%s;Company:%s;CallSign:%s;\
+DepDromeName:%d;ArrDromeName:%d;AlternateDrome:%s;CruiseLvl:%d;CruiseSpd:%d;ArrRunway:%s;DepRunway:%s;Weight:%s;DepGate:%s;\
+ArrGate:%s;VacateLine:%s;InRunwayLine:%d;DepartureTime:%s;ArrivalTime:%s;SidName:%s]",iFlightPlanId,sFlightNum,sSSRCode,bRVSM,iFlyPlanType,sSectorName,sCompany,sCallSign,
+sDepDromeName,sArrDromeName,sAlternateDrome,iCruiseLvl,iCruiseSpd,sArrRunway,sDepRunway,sWeight,sDepGate,sArrGate,sVacateLine,sInRunwayLine,sDepartureTime,
+sArrivalTime,sSidName);
+
+			return buf;
+
+		}
+        
+	
 	};
 	//目标计划
 	struct TowerObjectPlanStruct
@@ -354,12 +372,28 @@ namespace PublicDataStruct
 		char			strModelType[64];				//机型名
 		char			strRegNum[64];		            //注册号
 		bool 			bEngineStart;					//引擎是否起动
+
+		std::string  toString(){
+
+		char* buf=new char[BUFFERSZE];
+	    memset(buf,0,BUFFERSZE);
+
+		
+	   sprintf(buf,"TowerObjectPlanStruct:[ObjType:%d;SSR:%s;Longtitude:%L;Latitude:%L;Altitude:%L;Heading:%L;IAS:%L;AppearTime:%s;ModelType:%d;RegNum:%d;EngineStart:%s;]"
+		      ,static_cast<int>(ObjType),strSSrcode,dLongtitude,dLatitude,dAltitude,dHeading,dIAS,sAppearTime,strModelType,strRegNum,bEngineStart);
+		return buf;
+
+	}
 	};
 	//动态创建飞机包
 	struct TowerAircraftPacketStruct
 	{
 		TowerObjectPlanStruct TowerobjFlight;	//目标计划 /* 这里目标计划和飞行计划一一对应*/
 		TowerFlightPlanStruct TowerplanFlight;	//飞行计划
+		std::string toString(){
+
+			return TowerobjFlight.toString()+TowerplanFlight.toString();
+		}
 	};
 	//停机位信息
 	struct GateInformationStruct
@@ -607,6 +641,19 @@ namespace PublicDataStruct
 			sWeight="M";
 			sSSRCode="A1234";
 		}
+		std::string toString(){
+
+			char* buf=new char[BUFFERSZE];
+			memset(buf,0,BUFFERSZE);
+			sprintf(buf,"SFlyPlanFromDB:[FlyPlanNum:%s;SSR:%s;RVSM:%d;FlyPlanType:%d;SectorName:%s;DepDromeName:%s;ArrDromeName:%s;AlternateDrome:%s;\
+CruiseLvl:%d;CruiseSpd:%d;ArrRunway:%s;DepRunway:%s;Weight:%s;DepartureTime:%s;ArrivalTime:%s;ADepTime:%s;AArrTime:%s;\
+RegNum:%s;ModlType:%s;IsPlanFinished:%d]",sFlyPlanNum.c_str(),sSSRCode.c_str(),bRVSM,iFlyPlanType,sSectorName.c_str(),sDepDromeName.c_str(),sArrDromeName.c_str(),
+sAlternateDrome.c_str(),iCruiseLvl,iCruiseSpd,sArrRunway.c_str(),sDepRunway.c_str(),sWeight.c_str(),sDepartureTime.c_str(),sArrivalTime.c_str(),sADepTime.c_str(),
+sAArrTime.c_str(),sRegNum.c_str(),sModlType.c_str(),bIsPlanFinished);
+
+			return buf;
+   
+		}
 	};
 	//////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////
@@ -680,9 +727,9 @@ namespace PublicDataStruct
 		double dBaseDistance;//基本层
 		double dProtectDistance;//保护层
 		double dAlarmDistance;//告警层
-		double dX;//x坐标
-		double dY;//y坐标
-		double dAngle;//角度
+		//double dX;//x坐标
+		//double dY;//y坐标
+		//double dAngle;//角度
 		double dSafeDistance;//基本层+保护层+告警层
 		bool   bStop;
 		Aircraft(){

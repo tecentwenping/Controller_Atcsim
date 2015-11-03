@@ -23,7 +23,7 @@ double CTools::DistancePoint2Point( WPointF p1,WPointF p2 )
 	return distance;
 }
 
-int CTools::CompuTimeDiff( std::string time )
-{
-
-}
+//int CTools::CompuTimeDiff( std::string time )
+//{
+//
+//}

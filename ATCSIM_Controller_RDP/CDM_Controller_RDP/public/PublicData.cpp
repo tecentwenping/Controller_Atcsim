@@ -150,7 +150,6 @@ void CPublicData::GetPathInformation( MapPath& mapPath,int flag )
 	}
 
 }
-
 void CPublicData::GetMapGateName( MapGateName& mpGateName)
 {
 	mpGateName = m_mapGateName;
@@ -185,6 +184,7 @@ void CPublicData::GetCurrentFlyPlan(std::vector<QString>& vecCurFLyPlan)
 {
    vecCurFLyPlan = m_vecCurrentFlyPlan;
 }
+
 
 
 

@@ -33,12 +33,12 @@ void CDataManager::Init()
  		m_pInitGateInformation = boost::make_shared<CGateInformation>();
         m_pInitGateInformation.get()->ReadInformationFromFile();
  	}
-	if(! m_pInitPathInformation)
+	/*if(! m_pInitPathInformation)
 	{
 		qDebug()<<"Reading PathInformation....";
 		m_pInitPathInformation = boost::make_shared<CInitPathInformation>();
 		m_pInitPathInformation.get()->ReadInformationFromFile();
-	}
+	}*/
 	if(! m_pInitPointInformaton)
 	{
 		qDebug()<<"Reading PointInformation.....";
@@ -50,6 +50,11 @@ void CDataManager::Init()
 		qDebug()<<"TotalTracePtr initing....";
 		m_pTotalTrace = boost::make_shared<TotalAircraftTrace>();
 		//m_pTotalTracePtr = new TotalAircraftTrace();
+	}
+	if(!m_pTaxLineInformation){
+		qDebug()<<"offline taxline information initing..........";
+		m_pTaxLineInformation=boost::make_shared<CTaxiLineInformation>();
+		m_pTaxLineInformation.get()->GetTaxiLineInformation();
 	}
 }
 
@@ -134,8 +139,6 @@ void CDataManager::SetPathInformation( const MapPath& mapPath,int flag )
 		m_pPublicData.get()->SetOutPathInformation(mapPath);
 		break;
 	}
-	
-
 }
 
 

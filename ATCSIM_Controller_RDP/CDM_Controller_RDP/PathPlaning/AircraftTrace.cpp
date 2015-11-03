@@ -1,6 +1,7 @@
 #include "AircraftTrace.h"
 #include "AircraftInfo.h"
 #include "Manager/DataManager.h"
+#include "public/printFunc.h"
 #include <boost/make_shared.hpp>
 #include "Interface/theApp.h"
 //#include "public/ControllerAcftInfo.h"
@@ -124,6 +125,9 @@ void AircraftTrace::ComputPRLPos( int iTraceID )
 	// theApp::instance().GetDataManagerPtr()->SetTracePoint(iTraceID,vTracePos);
 
 	 theApp::instance().GetDataManagerPtr()->SetAircraftTracePoint1(iTraceID,dTracePos);
+	 //打印所有点
+	 printTrace(iTraceID,dTracePos);
+
 }
 
 void AircraftTrace::SetPRLTime(const float fTime)

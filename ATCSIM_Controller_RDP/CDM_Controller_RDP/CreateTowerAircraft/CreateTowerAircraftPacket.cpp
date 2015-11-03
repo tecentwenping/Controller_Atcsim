@@ -103,7 +103,7 @@ void CreateTowerAircraftPacket::CreateTowerObjPlan(PublicDataStruct::TowerFlight
 	towerObjectPlanStruct.dHeading = 0;//机头朝向（单位：弧度）
 	towerObjectPlanStruct.dIAS = 0;//初始速度（表速，单位s：米/秒）
 	strcpy( towerObjectPlanStruct.sAppearTime, str.toStdString().c_str());
-	strcpy( towerObjectPlanStruct.strModelType,"B737_300");
+	strcpy( towerObjectPlanStruct.strModelType,"B733");
 	strcpy( towerObjectPlanStruct.strRegNum,towerFlightPlanStruct.sFlightNum);
 	towerObjectPlanStruct.bEngineStart = true;//引擎不开启
 
@@ -225,6 +225,8 @@ void CreateTowerAircraftPacket::ConvertFlyPlanFromDBToTowerFlightPlan( PublicDat
 	   分配停机位在后期要用算法来实现，现在是谁空闲就分配谁，是按照顺序分配
 	*/
 	///////////////////////////////////////////////////////////////////////
+	//打印数据库中读出的信息
+	PrintInfomation<std::string>(FlightPlanFromDB.toString());
 	GateAllocate(m_enumTerminate_T,m_GateInformationStruct);
 	TowerFlightPlan.iFlightPlanId = m_iFlyPlanID; ++ m_iFlyPlanID;//航班ID加1
     strcpy(TowerFlightPlan.sFlightNum,FlightPlanFromDB.sFlyPlanNum.c_str());//航班号
@@ -255,6 +257,9 @@ void CreateTowerAircraftPacket::ConvertFlyPlanFromDBToTowerFlightPlan( PublicDat
 	strcpy(TowerFlightPlan.sCallSign,FlightPlanFromDB.sFlyPlanNum.c_str());
 	//判断航班类型，即进场离场，在该函数内部会设置m_PlanType的值
 	CheckPlanState(TowerFlightPlan);
+
+	//打印TowerAircraftPacket
+	PrintInfomation<std::string>(TowerFlightPlan.toString());
 }
 
 void CreateTowerAircraftPacket::CreateTowerAircraft( PublicDataStruct::TowerFlightPlanStruct& TowerFlightPlan,
@@ -270,7 +275,8 @@ void CreateTowerAircraftPacket::CreateTowerAircraft( PublicDataStruct::TowerFlig
 
 	}
 	//打印TowerAircraftPacket的信息
-	printInformation(m_TowerAircraftStruct,printTowerAicraftPacket);
+	//PrintInfomation<std::string>(m_TowerAircraftStruct.toString());
+	//printInformation(m_TowerAircraftStruct,printTowerAicraftPacket);
 	//存储飞机包，iFlightPlanId用于标识一个飞行计划
 	CQMutex mutex;
 	mutex.MyLock();

@@ -32,7 +32,7 @@ void NetProcess::SendAircraftTrace(const AircraftTrace& vAircraftTrace)
 	m_pUdpSendTraceSocket = (NULL == m_pUdpSendTraceSocket) ? (new QUdpSocket(this)):m_pUdpSendTraceSocket;
 	bool isBind = m_pUdpSendTraceSocket->bind(PublicDataStruct::SENDAIRCRAFTTRACEPORT);
 	int bytesWritten = m_pUdpSendTraceSocket->writeDatagram(dtaArray,QHostAddress::LocalHost,PublicDataStruct::SENDAIRCRAFTTRACEPORT);
-	printInformation(vAircraftTrace,printAircraftTrace);
+	printInformation(vAircraftTrace,printAircraftPoint);
 	delete m_pUdpSendTraceSocket;
 	m_pUdpSendTraceSocket = NULL;
 }

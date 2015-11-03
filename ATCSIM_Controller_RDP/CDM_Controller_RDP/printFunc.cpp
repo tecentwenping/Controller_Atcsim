@@ -10,7 +10,7 @@ void printTowerAicraftPacket(const PublicDataStruct::TowerAircraftPacketStruct& 
 		<<"  "<<towerAircraft.TowerplanFlight.sAlternateDrome<<"  "<<towerAircraft.TowerplanFlight.sDepartureTime
 		<<"  "<<towerAircraft.TowerplanFlight.sArrivalTime<<std::endl;
 }
-void printAircraftTrace(const AircraftTrace& aircraftTrace)
+void printAircraftPoint(const AircraftTrace& aircraftTrace)
 {
 	std::cout<<"--------------------------<AircraftTrace>--------------------------"<<std::endl;
 	std::cout<<"Send a aircraftTrace to the display model,this trace indicate a aircraft's current absolutly position in the display,the fllow information is: "<<std::endl;
@@ -18,3 +18,16 @@ void printAircraftTrace(const AircraftTrace& aircraftTrace)
 	std::cout<<"---SSRCode:"<<aircraftTrace.m_strSSR<<std::endl;
 	std::cout<<"---CurrentPos(x,y):"<<aircraftTrace.m_fAbsX<<"  "<<aircraftTrace.m_fAbsY<<std::endl;
 }
+
+void printTrace( int iFlightID,std::deque<WPointF>& Trace )
+{
+		std::deque<WPointF>::iterator Iter=Trace.begin();
+		while(Iter++!=Trace.end()){
+	
+			std::cout<<"iFlightID:"<<iFlightID<<":("<<(*Iter).rx()<<","<<(*Iter).ry()<<"),";
+	
+		}
+		std::cout<<std::endl;
+}
+
+

@@ -248,36 +248,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\CollisionDetect.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\CollisionDetect.h"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description=""
-							CommandLine=""
-							AdditionalDependencies=""
-							Outputs=""
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description=""
-							CommandLine=""
-							AdditionalDependencies=""
-							Outputs=""
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath=".\PathPlaning\ControllerAcftTrack.cpp"
 					>
 				</File>
@@ -434,34 +404,12 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Tools.cpp"
+					RelativePath=".\public\Tools.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Tools.h"
+					RelativePath=".\public\Tools.h"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description=""
-							CommandLine=""
-							AdditionalDependencies=""
-							Outputs=""
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description=""
-							CommandLine=""
-							AdditionalDependencies=""
-							Outputs=""
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\public\TowerSimuFPlanStruct.h"
@@ -654,34 +602,12 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\TaxiLineInformation.cpp"
+					RelativePath=".\Manager\TaxiLineInformation.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TaxiLineInformation.h"
+					RelativePath=".\Manager\TaxiLineInformation.h"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description=""
-							CommandLine=""
-							AdditionalDependencies=""
-							Outputs=""
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description=""
-							CommandLine=""
-							AdditionalDependencies=""
-							Outputs=""
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -766,6 +692,10 @@
 			</Filter>
 			<Filter
 				Name="Test"
+				>
+			</Filter>
+			<Filter
+				Name="Log"
 				>
 			</Filter>
 		</Filter>

@@ -8,7 +8,7 @@ public:
 	static void ConvertInt2String(int number,std::string& result);
 	static int ConvertString2Int(int mumber,const std::string& sourceStr);
 	static double DistancePoint2Point(WPointF p1,WPointF p2);
-	static int CompuTimeDiff(std::string time);
+	//static int CompuTimeDiff(std::string time);
 	
 	
 };

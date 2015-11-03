@@ -71,12 +71,7 @@ private:
 	*变量：返回值是后点的ID
 	**************************************************************************/
 	void  _CollisionDectect_Aux(int iTraceID1,int iTraceID2);
-	/**************************************************************************
-	*函数名：_CompuWakeDistance
-	*函数功能：返回两个尾流的安全间距
-	*变量：
-	**************************************************************************/
-	int _CompuWakeDistance(std::string wake1,std::string wake2);
+	
 	/**************************************************************************
 	*函数名：_DisPenserTraceToClient
 	*函数功能：执行分发任务的具体函数
@@ -93,6 +88,7 @@ private:
 	//========================================================================
 	std::vector<int>				m_aircrftTraceToDispenserVec;
 	std::vector<int>				m_aircraftTraceVec;
+	std::vector<int>				m_aircraftStopVec;//需要停等的航空器的ID
 	
 };
 

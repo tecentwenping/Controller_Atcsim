@@ -18,6 +18,7 @@
 #include <vector>
 #include <hash_map>
 #include "public/PublicStruct.h"
+#include "Manager/TaxiLineInformation.h"
 #include "wworldpoint.h"
 #include <deque>
 using boost::details::pool::singleton_default;
@@ -33,6 +34,7 @@ typedef boost::shared_ptr<CFile>									FilePtr;//文件操作类
 typedef boost::shared_ptr<CInitPointInformation>					InitPointInformationPtr;
 typedef boost::shared_ptr<CPublicData>	        					CPublicDataPtr;
 typedef boost::shared_ptr<TotalAircraftTrace>						TotalAircraftTracePtr;
+typedef boost::shared_ptr<CTaxiLineInformation>						TaxiLineInformationPtr;
 /////////////////////////////////////////////////////////////////////////////////////////////
 typedef std::map<int,std::vector<WPointF> >							MapAircraftTrace;
 typedef stdext::hash_map<int,AircraftTrace*>						hmFplTraces;				
@@ -93,6 +95,7 @@ private:
 	CPublicDataPtr			m_pPublicData;//公共数据
 	TotalAircraftTracePtr	m_pTotalTrace;
 	TotalAircraftTrace      *m_pTotalTracePtr;
+	TaxiLineInformationPtr  m_pTaxLineInformation;
 };
 //创建数据管理器单件
 typedef singleton_default<CDataManager> theData;
