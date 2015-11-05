@@ -23,41 +23,30 @@ CDataManager::~CDataManager()
 
 void CDataManager::Init()
 {
-	//if( ! m_pPublicData)
-	//{
-	//	qDebug()<<"PublicData initing....";
-	//	m_pPublicData = boost::make_shared<CPublicData>(dCenterLongtitude,dCenterLatitude);
-	//}
- //	if(! m_pInitGateInformation)
- //	{
- //		qDebug()<<"Reading GateInformation.....";
- //		m_pInitGateInformation = boost::make_shared<CGateInformation>();
-	//	m_pInitGateInformation.get()->ReadGateInformation();
- //      // m_pInitGateInformation.get()->ReadInformationFromFile();
- //	}
-	////if(! m_pInitPathInformation)
-	////{
-	////	qDebug()<<"Reading PathInformation....";
-	////	m_pInitPathInformation = boost::make_shared<CInitPathInformation>();
-	////	m_pInitPathInformation.get()->ReadInformationFromFile();
-	////}
-	//if(! m_pInitPointInformaton)
-	//{
-	//	qDebug()<<"Reading PointInformation.....";
-	//	m_pInitPointInformaton = boost::make_shared<CInitPointInformation>();
-	//	m_pInitPointInformaton.get()->Init();
-	//}
-	//if(! m_pTotalTrace)
-	//{
-	//	qDebug()<<"TotalTracePtr initing....";
-	//	m_pTotalTrace = boost::make_shared<TotalAircraftTrace>();
-	//	//m_pTotalTracePtr = new TotalAircraftTrace();
-	//}
-	//if(!m_pTaxLineInformation){
-	//	qDebug()<<"offline taxline information initing..........";
-	//	m_pTaxLineInformation=boost::make_shared<CTaxiLineInformation>();
-	//	m_pTaxLineInformation.get()->GetTaxiLineInformation();
-	//}
+	if( ! m_pPublicData)
+	{
+		m_pPublicData = boost::make_shared<CPublicData>(dCenterLongtitude,dCenterLatitude);
+	}
+ 	if(! m_pGateInformation)
+ 	{
+ 		m_pGateInformation = boost::make_shared<CGateInformation>();
+		m_pGateInformation.get()->ReadGateInformation();
+ 	}
+
+	if(! m_pInitPointInformaton)
+	{
+		m_pInitPointInformaton = boost::make_shared<CInitPointInformation>();
+		m_pInitPointInformaton.get()->Init();
+	}
+	if(! m_pTotalAircraftTrace)
+	{
+		m_pTotalAircraftTrace = boost::make_shared<TotalAircraftTrace>();
+	}
+	if(!m_pTaxiLineInformation){
+
+		m_pTaxiLineInformation=boost::make_shared<CTaxiLineInformation>();
+		m_pTaxiLineInformation.get()->GetTaxiLineInformation();
+	}
 }
 
 //void CDataManager::GetCenterCoordinate( double& dCenterLongtitude,double& dLatitude )
