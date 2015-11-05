@@ -6,6 +6,7 @@
 #include "public/PublicData.h"
 #include "Manager/PathInformation.h"
 #include "Manager/GateInformation.h"
+#include "Manager/ReadFile.h"
 
 //双流机场的经纬度
 const double dCenterLongtitude = 1.81421157980637;
@@ -22,125 +23,125 @@ CDataManager::~CDataManager()
 
 void CDataManager::Init()
 {
-	if( ! m_pPublicData)
-	{
-		qDebug()<<"PublicData initing....";
-		m_pPublicData = boost::make_shared<CPublicData>(dCenterLongtitude,dCenterLatitude);
-	}
- 	if(! m_pInitGateInformation)
- 	{
- 		qDebug()<<"Reading GateInformation.....";
- 		m_pInitGateInformation = boost::make_shared<CGateInformation>();
-		m_pInitGateInformation.get()->ReadGateInformation();
-       // m_pInitGateInformation.get()->ReadInformationFromFile();
- 	}
-	//if(! m_pInitPathInformation)
+	//if( ! m_pPublicData)
 	//{
-	//	qDebug()<<"Reading PathInformation....";
-	//	m_pInitPathInformation = boost::make_shared<CInitPathInformation>();
-	//	m_pInitPathInformation.get()->ReadInformationFromFile();
+	//	qDebug()<<"PublicData initing....";
+	//	m_pPublicData = boost::make_shared<CPublicData>(dCenterLongtitude,dCenterLatitude);
 	//}
-	if(! m_pInitPointInformaton)
-	{
-		qDebug()<<"Reading PointInformation.....";
-		m_pInitPointInformaton = boost::make_shared<CInitPointInformation>();
-		m_pInitPointInformaton.get()->Init();
-	}
-	if(! m_pTotalTrace)
-	{
-		qDebug()<<"TotalTracePtr initing....";
-		m_pTotalTrace = boost::make_shared<TotalAircraftTrace>();
-		//m_pTotalTracePtr = new TotalAircraftTrace();
-	}
-	if(!m_pTaxLineInformation){
-		qDebug()<<"offline taxline information initing..........";
-		m_pTaxLineInformation=boost::make_shared<CTaxiLineInformation>();
-		m_pTaxLineInformation.get()->GetTaxiLineInformation();
-	}
+ //	if(! m_pInitGateInformation)
+ //	{
+ //		qDebug()<<"Reading GateInformation.....";
+ //		m_pInitGateInformation = boost::make_shared<CGateInformation>();
+	//	m_pInitGateInformation.get()->ReadGateInformation();
+ //      // m_pInitGateInformation.get()->ReadInformationFromFile();
+ //	}
+	////if(! m_pInitPathInformation)
+	////{
+	////	qDebug()<<"Reading PathInformation....";
+	////	m_pInitPathInformation = boost::make_shared<CInitPathInformation>();
+	////	m_pInitPathInformation.get()->ReadInformationFromFile();
+	////}
+	//if(! m_pInitPointInformaton)
+	//{
+	//	qDebug()<<"Reading PointInformation.....";
+	//	m_pInitPointInformaton = boost::make_shared<CInitPointInformation>();
+	//	m_pInitPointInformaton.get()->Init();
+	//}
+	//if(! m_pTotalTrace)
+	//{
+	//	qDebug()<<"TotalTracePtr initing....";
+	//	m_pTotalTrace = boost::make_shared<TotalAircraftTrace>();
+	//	//m_pTotalTracePtr = new TotalAircraftTrace();
+	//}
+	//if(!m_pTaxLineInformation){
+	//	qDebug()<<"offline taxline information initing..........";
+	//	m_pTaxLineInformation=boost::make_shared<CTaxiLineInformation>();
+	//	m_pTaxLineInformation.get()->GetTaxiLineInformation();
+	//}
 }
 
-void CDataManager::GetCenterCoordinate( double& dCenterLongtitude,double& dLatitude )
-{
-    m_pPublicData.get()->SetCenterCoordinate(dCenterLongtitude,dLatitude);
-}
-
-void CDataManager::GetMapAirTrace( MapAircraftTrace& mpAircraftTrace )
-{
-    m_pPublicData.get()->GetMapAircraftTrace(mpAircraftTrace);
-}
-
-void CDataManager::SetMapAirTrace(const MapAircraftTrace& mapAircraftTrace)
-{
-	m_pPublicData->SetAircraftTrace(mapAircraftTrace);
-
-}
-
-//void CDataManager::SetTracePoint(int iTraceno, const std::vector<WPointF>& vecTracePoint )
+//void CDataManager::GetCenterCoordinate( double& dCenterLongtitude,double& dLatitude )
 //{
-//    m_pTotalTrace.get()->UpdateAircraftTracePoint(iTraceno,vecTracePoint);
+//    //m_pPublicData.get()->SetCenterCoordinate(dCenterLongtitude,dLatitude);
+//}
+//
+//void CDataManager::GetMapAirTrace( MapAircraftTrace& mpAircraftTrace )
+//{
+//   // m_pPublicData.get()->GetMapAircraftTrace(mpAircraftTrace);
+//}
+//
+//void CDataManager::SetMapAirTrace(const MapAircraftTrace& mapAircraftTrace)
+//{
+//	//m_pPublicData->SetAircraftTrace(mapAircraftTrace);
 //
 //}
 //
-//void CDataManager::GetTracePoint( int iTraceno,std::vector<WPointF>& vecTracePoint )
+////void CDataManager::SetTracePoint(int iTraceno, const std::vector<WPointF>& vecTracePoint )
+////{
+////    m_pTotalTrace.get()->UpdateAircraftTracePoint(iTraceno,vecTracePoint);
+////
+////}
+////
+////void CDataManager::GetTracePoint( int iTraceno,std::vector<WPointF>& vecTracePoint )
+////{
+////   m_pTotalTrace.get()->GetAircraftTracePoint(iTraceno,vecTracePoint);
+////}
+//
+//void CDataManager::SetAircraftTrace( int iTraceno, AircraftTrace* aicraftTrace )
 //{
-//   m_pTotalTrace.get()->GetAircraftTracePoint(iTraceno,vecTracePoint);
+//	//m_pTotalTrace.get()->UpdateAircraftTrace(iTraceno,aicraftTrace);
+//	//m_pTotalTracePtr->UpdateAircraftTrace(iTraceno,aicraftTrace);
+//
 //}
-
-void CDataManager::SetAircraftTrace( int iTraceno, AircraftTrace* aicraftTrace )
-{
-	m_pTotalTrace.get()->UpdateAircraftTrace(iTraceno,aicraftTrace);
-	//m_pTotalTracePtr->UpdateAircraftTrace(iTraceno,aicraftTrace);
-
-}
-
-void CDataManager::GetAircraftTrace( hmFplTraces& hmFplTrace )
-{
-	//int i=0;
-	//print("%d\n",i);
-	//m_pTotalTrace->GetTraces(hmFplTrace);
-
-}
-TotalAircraftTrace* CDataManager::GetTotalAircraftTracePtr()
-{
-	if(m_pTotalTrace)
-	{
-	   return m_pTotalTrace.get();
-	}
-	return boost::make_shared<TotalAircraftTrace>().get();
-}
-void CDataManager::GetFlyPlan( std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan )
-{
-	m_pPublicData.get()->GetVecFlyPlanFromDB(vecFlyPlan);
-}
-void CDataManager::SetFlyPlan(std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan )
-{
-	m_pPublicData.get()->SetVecFlyPlanFromDB(vecFlyPlan);
-}
-
-//void CDataManager::SetGateInformation(const VecGateInformation& vecGateInformation,int flag )
+//
+//void CDataManager::GetAircraftTrace( hmFplTraces& hmFplTrace )
 //{
-//	switch(flag)
-//	{
-//	case 1:
-//		m_pPublicData.get()->SetGateInformation_T1(vecGateInformation);
-//		break;
-//	case  2:
-//		m_pPublicData.get()->SetGateInformation_T2(vecGateInformation);
-//		break;
-//	}
+//	//int i=0;
+//	//print("%d\n",i);
+//	//m_pTotalTrace->GetTraces(hmFplTrace);
+//
 //}
-void CDataManager::SetGateInformation_New(const VecGateInformation& vecGateInformation)
-{
-       m_pPublicData.get()->SetGateInformation_New(vecGateInformation);
-}
-void CDataManager::GetGateInformation_New(VecGateInformation& vecGateInformation)
-{
-		m_pPublicData.get()->GetGateInformation_New(vecGateInformation);
-}
-VecGateInformation& CDataManager::GetGateInformation_New()
-{
-	    return m_pPublicData.get()->GetGateInformation_New();
-}
+////TotalAircraftTrace* CDataManager::GetTotalAircraftTracePtr()
+////{
+////	/*if(m_pTotalTrace)
+////	{
+////	   return m_pTotalTrace.get();
+////	}
+////	return boost::make_shared<TotalAircraftTrace>().get();*/
+////}
+//void CDataManager::GetFlyPlan( std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan )
+//{
+//	//m_pPublicData.get()->GetVecFlyPlanFromDB(vecFlyPlan);
+//}
+//void CDataManager::SetFlyPlan(std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan )
+//{
+//	//m_pPublicData.get()->SetVecFlyPlanFromDB(vecFlyPlan);
+//}
+//
+////void CDataManager::SetGateInformation(const VecGateInformation& vecGateInformation,int flag )
+////{
+////	switch(flag)
+////	{
+////	case 1:
+////		m_pPublicData.get()->SetGateInformation_T1(vecGateInformation);
+////		break;
+////	case  2:
+////		m_pPublicData.get()->SetGateInformation_T2(vecGateInformation);
+////		break;
+////	}
+////}
+//void CDataManager::SetGateInformation_New(const VecGateInformation& vecGateInformation)
+//{
+//      // m_pPublicData.get()->SetGateInformation_New(vecGateInformation);
+//}
+//void CDataManager::GetGateInformation_New(VecGateInformation& vecGateInformation)
+//{
+//		//m_pPublicData.get()->GetGateInformation_New(vecGateInformation);
+//}
+////VecGateInformation& CDataManager::GetGateInformation_New()
+////{
+////	    //return m_pPublicData.get()->GetGateInformation_New();
+////}
 void CDataManager::SetPathInformation( const MapPath& mapPath,int flag )
 {
 	switch(flag)
@@ -153,112 +154,160 @@ void CDataManager::SetPathInformation( const MapPath& mapPath,int flag )
 		break;
 	}
 }
-
-
-void CDataManager::SetPathPoint(int iFlyID,QStringList& vecPathPoint)
-{
-	m_pPublicData.get()->SetPathPoint(iFlyID,vecPathPoint);
-}
-void CDataManager::GetPathPoint(int iFlyID,QStringList& vecPathPoint)
-{
-	m_pPublicData.get()->GetPathPoint(iFlyID,vecPathPoint);
-}
-
-void CDataManager::GetPathInformation( MapPath& mapPath,int flag )
-{
-	m_pPublicData.get()->GetPathInformation(mapPath,flag);
-}
-
-//void CDataManager::GetGateInformation_T1( VecGateInformation& vecGateInformation )
+//
+//
+//void CDataManager::SetPathPoint(int iFlyID,QStringList& vecPathPoint)
 //{
-//	m_pPublicData.get()->GetGateInformation_T1(vecGateInformation);
+//	//m_pPublicData.get()->SetPathPoint(iFlyID,vecPathPoint);
+//}
+//void CDataManager::GetPathPoint(int iFlyID,QStringList& vecPathPoint)
+//{
+//	//m_pPublicData.get()->GetPathPoint(iFlyID,vecPathPoint);
+//}
+//
+//void CDataManager::GetPathInformation( MapPath& mapPath,int flag )
+//{
+//	//m_pPublicData.get()->GetPathInformation(mapPath,flag);
+//}
+//
+////void CDataManager::GetGateInformation_T1( VecGateInformation& vecGateInformation )
+////{
+////	m_pPublicData.get()->GetGateInformation_T1(vecGateInformation);
+////
+////}
+////VecGateInformation& CDataManager::GetGateInformation_T1()
+////{
+////	return m_pPublicData.get()->GetGateInformation_T1();
+////}
+////void CDataManager::GetGateInformation_T2( VecGateInformation& vecGateInformation )
+////{
+////	m_pPublicData.get()->GetGateInformation_T2(vecGateInformation);
+////
+////}
+////VecGateInformation& CDataManager::GetGateInformation_T2()
+////{
+////	return m_pPublicData.get()->GetGateInformaiton_T2();
+////}
+//void CDataManager::GetMapGateName( MapGateName& mapGateName )
+//{
+//	//m_pPublicData.get()->GetMapGateName(mapGateName);
 //
 //}
-//VecGateInformation& CDataManager::GetGateInformation_T1()
+//
+//void CDataManager::GetMapTaxiLine( MapTaxiLine& mapTaxiLine )
 //{
-//	return m_pPublicData.get()->GetGateInformation_T1();
+// // m_pPublicData.get()->GetMapTaxiLine(mapTaxiLine);
 //}
-//void CDataManager::GetGateInformation_T2( VecGateInformation& vecGateInformation )
+//
+//void CDataManager::GetMapFixPoint( MapFixPoint& mapFixPoint )
 //{
-//	m_pPublicData.get()->GetGateInformation_T2(vecGateInformation);
+//	//m_pPublicData.get()->GetMapFixPoint(mapFixPoint);
 //
 //}
-//VecGateInformation& CDataManager::GetGateInformation_T2()
+//
+////void CDataManager::GetMapTowerAircraftPacket( MapTowerAircraftPacket& mapTowerAircraft )
+////{
+////	//m_pPublicData.get()->GetMapTowerAircraftPacket(mapTowerAircraft);
+////}
+//
+////MapTowerAircraftPacket& CDataManager::GetMapTowerAircraftPacket()
+////{
+////	//return m_pPublicData.get()->GetMapTowerAircraftPacket();
+////
+////}
+//
+//void CDataManager::SetMapFixPoint( const MapFixPoint& mpFixPoint )
 //{
-//	return m_pPublicData.get()->GetGateInformaiton_T2();
+//	//m_pPublicData.get()->SetFixPoint(mpFixPoint);
+//
 //}
-void CDataManager::GetMapGateName( MapGateName& mapGateName )
+//
+//void CDataManager::SetMapTaxLine( const MapTaxiLine& mpTaxLine )
+//{
+//   //m_pPublicData.get()->SetTaxiLine(mpTaxLine);
+//}
+//
+//void CDataManager::SetMapGateName( const MapGateName& mpGateName )
+//{
+//	//m_pPublicData.get()->SetGateName(mpGateName);
+//
+//}
+//
+//void CDataManager::SetMapTowerAircraftPacket( const MapTowerAircraftPacket& mpTowerAircraft )
+//{
+//	//m_pPublicData.get()->SetTowerAircraftPacket(mpTowerAircraft);
+//
+//}
+//void CDataManager::SetCurrentFlyPlan(const QString& singleFlyPlan)
+//{
+//	//m_pPublicData.get()->SetCurrentFlyPlan(singleFlyPlan);
+//}
+//void CDataManager::GetCurrentFlyPlan(std::vector<QString>& vecCurFlyPlan)
+//{
+//	//m_pPublicData.get()->GetCurrentFlyPlan(vecCurFlyPlan);
+//}
+//
+//void CDataManager::SetAircraftTracePoint1( int traceID,const std::deque<WPointF>& dTrace )
+//{
+//  //  m_pTotalTrace.get()->UpdateAircraftTracePoint1(traceID,dTrace);
+//
+//}
+//
+//void CDataManager::GetAircraftTracePoint1( int traceID, std::deque<WPointF>& dTrace )
+//{
+//	//m_pTotalTrace.get()->GetAircraftTracePoint1(traceID,dTrace);
+//
+//}
+//
+////TotalAircraftTracePtr CDataManager::GetTotalAircraftTracePtr_New()
+////{
+////   //return m_pTotalTrace;
+////}
+
+
+
+CInitPointInformation* CDataManager::GetInitPointInformationPtr()
 {
-	m_pPublicData.get()->GetMapGateName(mapGateName);
+	if(m_pInitPointInformaton)
+	{
+		return m_pInitPointInformaton.get();
+	}
+	return boost::make_shared<CInitPointInformation>().get();
+}
+
+CPublicData* CDataManager::GetPublicDataPtr()
+{
+	if(m_pPublicData)
+	{
+		return m_pPublicData.get();
+	}
+	return boost::make_shared<CPublicData>().get();
+}
+
+TotalAircraftTrace* CDataManager::GetTotalAircrafTracePtr()
+{
+	if(m_pTotalAircraftTrace)
+	{
+		return m_pTotalAircraftTrace.get();
+	}
+	return boost::make_shared<TotalAircraftTrace>().get();
+}
+
+CTaxiLineInformation* CDataManager::GetTaxLineInfomationPtr()
+{
+	if(m_pTaxiLineInformation)
+	{
+		return m_pTaxiLineInformation.get();
+	}
+	return boost::make_shared<CTaxiLineInformation>().get();
 
 }
 
-void CDataManager::GetMapTaxiLine( MapTaxiLine& mapTaxiLine )
+CFile* CDataManager::GetGateInformationPtr()
 {
-  m_pPublicData.get()->GetMapTaxiLine(mapTaxiLine);
-}
-
-void CDataManager::GetMapFixPoint( MapFixPoint& mapFixPoint )
-{
-	m_pPublicData.get()->GetMapFixPoint(mapFixPoint);
-
-}
-
-void CDataManager::GetMapTowerAircraftPacket( MapTowerAircraftPacket& mapTowerAircraft )
-{
-	m_pPublicData.get()->GetMapTowerAircraftPacket(mapTowerAircraft);
-}
-
-MapTowerAircraftPacket& CDataManager::GetMapTowerAircraftPacket()
-{
-	return m_pPublicData.get()->GetMapTowerAircraftPacket();
-
-}
-
-void CDataManager::SetMapFixPoint( const MapFixPoint& mpFixPoint )
-{
-	m_pPublicData.get()->SetFixPoint(mpFixPoint);
-
-}
-
-void CDataManager::SetMapTaxLine( const MapTaxiLine& mpTaxLine )
-{
-   m_pPublicData.get()->SetTaxiLine(mpTaxLine);
-}
-
-void CDataManager::SetMapGateName( const MapGateName& mpGateName )
-{
-	m_pPublicData.get()->SetGateName(mpGateName);
-
-}
-
-void CDataManager::SetMapTowerAircraftPacket( const MapTowerAircraftPacket& mpTowerAircraft )
-{
-	m_pPublicData.get()->SetTowerAircraftPacket(mpTowerAircraft);
-
-}
-void CDataManager::SetCurrentFlyPlan(const QString& singleFlyPlan)
-{
-	m_pPublicData.get()->SetCurrentFlyPlan(singleFlyPlan);
-}
-void CDataManager::GetCurrentFlyPlan(std::vector<QString>& vecCurFlyPlan)
-{
-	m_pPublicData.get()->GetCurrentFlyPlan(vecCurFlyPlan);
-}
-
-void CDataManager::SetAircraftTracePoint1( int traceID,const std::deque<WPointF>& dTrace )
-{
-    m_pTotalTrace.get()->UpdateAircraftTracePoint1(traceID,dTrace);
-
-}
-
-void CDataManager::GetAircraftTracePoint1( int traceID, std::deque<WPointF>& dTrace )
-{
-	m_pTotalTrace.get()->GetAircraftTracePoint1(traceID,dTrace);
-
-}
-
-TotalAircraftTracePtr CDataManager::GetTotalAircraftTracePtr_New()
-{
-   return m_pTotalTrace;
+	if(m_pGateInformation)
+	{
+		return m_pGateInformation.get();
+	}
+	return boost::make_shared<CFile>().get();
 }

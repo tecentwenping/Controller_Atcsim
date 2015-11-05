@@ -29,10 +29,11 @@ class TowerAircraftPacketStruct;
 class TotalAircraftTrace;
 class AircraftTrace;
 class AircraftTraceNewVersion;
+class CGateInformation;
 ///////////////////////////////////////////////////////////////////////////////////////////
 typedef boost::shared_ptr<CFile>									FilePtr;//文件操作类
 typedef boost::shared_ptr<CInitPointInformation>					InitPointInformationPtr;
-typedef boost::shared_ptr<CPublicData>	        					CPublicDataPtr;
+typedef boost::shared_ptr<CPublicData>	        					PublicDataPtr;
 typedef boost::shared_ptr<TotalAircraftTrace>						TotalAircraftTracePtr;
 typedef boost::shared_ptr<CTaxiLineInformation>						TaxiLineInformationPtr;
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,29 +56,22 @@ public:
 	void	  Init();
 public:
 	void					GetCenterCoordinate(double& dCenterLongtitude,double& dLatitude);//设置机场中心坐标（默认为双流机场）
-	//void					GetGateInformation_T1(VecGateInformation& vecGateInformation);//获取T1航站楼停机位信息
-	//void					GetGateInformation_T2(VecGateInformation& vecGateInformation);//获取T2航站楼停机位信息
-	//VecGateInformation&		GetGateInformation_T1();
-	//VecGateInformation&     GetGateInformation_T2();
 	void					GetMapGateName(MapGateName& mapGateName);//获取停机位名称
 	void					GetMapTaxiLine(MapTaxiLine& mapTaxiLine);//获取滑行道
 	void					GetMapFixPoint(MapFixPoint& mapFixPoint);//获取固定点
-	void					GetMapTowerAircraftPacket(MapTowerAircraftPacket& mapTowerAircraft);//获取飞机包
-	MapTowerAircraftPacket& GetMapTowerAircraftPacket();
+	//void					GetMapTowerAircraftPacket(MapTowerAircraftPacket& mapTowerAircraft);//获取飞机包
+	//MapTowerAircraftPacket& GetMapTowerAircraftPacket();
 	void					GetMapAirTrace(MapAircraftTrace& mapAircraftTrace);
-	//void					GetTracePoint(int iTraceno,std::vector<WPointF>& vecTracePoint);
 	void					GetAircraftTrace(hmFplTraces& hmFplTrace);
-	TotalAircraftTrace*     GetTotalAircraftTracePtr();
+	//TotalAircraftTrace*     GetTotalAircraftTracePtr();
 	void					GetFlyPlan(std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan);
 	void					GetPathPoint(int iFlyID,QStringList& vecPathPoint);
 	void					GetPathInformation(MapPath& mapPath,int flag);
 	void					GetCurrentFlyPlan(std::vector<QString>& vecCurFlyPlan);
 	//////////////////////////////////////////////////////////////////////////////////
 	void					SetMapAirTrace(const MapAircraftTrace& mapAircraftTrace);
-	//void					SetTracePoint(int iTraceno,const std::vector<WPointF>& vecTracePoint);
 	void					SetPathInformation(const MapPath& mapPath,int flag);
 	void					SetFlyPlan(std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan);
-	//void					SetGateInformation(const VecGateInformation& vecGateInformation,int flag);
 	void					SetPathPoint(int iFlyID,QStringList& vecPathPoint);
 	void					SetAircraftTrace(int iTraceno,AircraftTrace* aicraftTrace);
 	void					SetMapFixPoint(const MapFixPoint& mpFixPoint);
@@ -91,14 +85,28 @@ public:
     void					GetGateInformation_New(VecGateInformation& vecGateInformation);
 	void					SetGateInformation_New(const VecGateInformation& vecGateInformation);
 	VecGateInformation&     GetGateInformation_New();
+	//////////////////////////////////////////////////////////////////////////////////////////////////////
+	CInitPointInformation*      GetInitPointInformationPtr();
+	CPublicData*				GetPublicDataPtr();
+	TotalAircraftTrace*         GetTotalAircrafTracePtr();
+	CTaxiLineInformation*		GetTaxLineInfomationPtr();
+	CFile*						GetGateInformationPtr();
 private:
-	FilePtr					m_pInitGateInformation;//停机位信息
-	FilePtr					m_pInitPathInformation;//路径信息
-	InitPointInformationPtr m_pInitPointInformaton;//点的信息
-	CPublicDataPtr			m_pPublicData;//公共数据
-	TotalAircraftTracePtr	m_pTotalTrace;
-	TotalAircraftTrace      *m_pTotalTracePtr;
-	TaxiLineInformationPtr  m_pTaxLineInformation;
+//	FilePtr					m_pInitGateInformation;//停机位信息
+//	FilePtr					m_pInitPathInformation;//路径信息
+////	InitPointInformationPtr m_pInitPointInformaton;//点的信息
+//	CPublicDataPtr			m_pPublicData;//公共数据
+//	TotalAircraftTracePtr	m_pTotalTrace;
+//	TotalAircraftTrace      *m_pTotalTracePtr;
+//	TaxiLineInformationPtr  m_pTaxLineInformation;
+
+/////////////////////////////////////////////////////////////////////
+private:
+	FilePtr					m_pGateInformation;
+	InitPointInformationPtr m_pInitPointInformaton;
+	PublicDataPtr		    m_pPublicData;
+	TotalAircraftTracePtr	m_pTotalAircraftTrace;
+	TaxiLineInformationPtr  m_pTaxiLineInformation;
 public:
 	TotalAircraftTracePtr	GetTotalAircraftTracePtr_New();
 };

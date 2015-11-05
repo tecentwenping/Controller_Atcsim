@@ -36,7 +36,7 @@ bool CGetFlyPlanFromDB::ReadFlyPlanFromDB()
 	PublicDataStruct::SFlyPlanFromDB flyPlanFromDBStructTemp;
 	while (FlyPlanQuery.next())
 	{
-		theData::instance().GetCurrentFlyPlan(m_vecCurrentFlyPlan);
+		theData::instance().GetPublicDataPtr()->GetCurrentFlyPlan(m_vecCurrentFlyPlan);
 		if(!m_vecCurrentFlyPlan.empty())
 		{
 			//查找查询出来的航班号是否已经存在，如果存在，则读取下一条记录
@@ -69,14 +69,14 @@ bool CGetFlyPlanFromDB::ReadFlyPlanFromDB()
 		}
 		//存储飞行计划	
 		m_vecFlyPlan.push_back(flyPlanFromDBStructTemp);
-		theData::instance().SetCurrentFlyPlan(FlyPlanQuery.value(0).toString());
+		theData::instance().GetPublicDataPtr()->SetCurrentFlyPlan(FlyPlanQuery.value(0).toString());
 	}
 	//DataBaseAccessObj::GetInstance()->func_closeConnection();
 	if(!m_vecFlyPlan.empty())
 	{
 		boost::shared_mutex sMutex;
 		sMutex.lock();
-		theData::instance().SetFlyPlan(m_vecFlyPlan);
+		theData::instance().GetPublicDataPtr()->SetVecFlyPlanFromDB(m_vecFlyPlan);
 		sMutex.unlock();
 		return true;
 	}

@@ -35,7 +35,7 @@ void CGateInformation::ReadGateInformation()
 	vGateInformation vecGate;
 	GetInfoFromFile(gateInfomationFile,vecGate);
 	if(!vecGate.empty()){
-		theData::instance().SetGateInformation_New(vecGate);
+		theData::instance().GetPublicDataPtr()->SetGateInformation_New(vecGate);
 	}
 }
 

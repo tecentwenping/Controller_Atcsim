@@ -44,9 +44,10 @@ void NetDataDispenser::DispenserTraceToClient()
 bool NetDataDispenser::InitData()
 {
 	//获得最新的航迹信息
-	theApp::instance().GetDataManagerPtr()->GetTotalAircraftTracePtr()->GetTraces(m_hmTrace);
+	theData::instance().GetTotalAircrafTracePtr()->GetTraces(m_hmTrace);
+	theData::instance().GetTotalAircrafTracePtr()->GetAircraftTracePoint1(m_hmTracePoint);
 	//theApp::instance().GetDataManagerPtr()->GetTotalAircraftTracePtr()->GetAircraftTracePoint(m_hmTracePoint);
-    theApp::instance().GetDataManagerPtr()->GetTotalAircraftTracePtr()->GetAircraftTracePoint1(m_hmTracePoint);
+    //theApp::instance().GetDataManagerPtr()->GetTotalAircraftTracePtr()->GetAircraftTracePoint1(m_hmTracePoint);
 	if(m_hmTrace.empty()||m_hmTracePoint.empty())
 	{
 		return false;
@@ -68,7 +69,7 @@ void NetDataDispenser::UpdateAircraftTrace(AircraftTrace* pTrace )
 void NetDataDispenser::AircraftTraceToDispenser()
 {  
 	QTime currentTime;
-	MapTowerAircraftPacket& mTowerAircraftPacket=theData::instance().GetMapTowerAircraftPacket();
+	MapTowerAircraftPacket& mTowerAircraftPacket=theData::instance().GetPublicDataPtr()->GetMapTowerAircraftPacket();
 	hmFplTraces::iterator traceIter = m_hmTrace.begin();
 	while(traceIter!=m_hmTrace.end()){
 		int traceID=traceIter->first;//飞行计划ID
@@ -142,7 +143,7 @@ int NetDataDispenser::CompuAngle( int iTraceID )
 
 		std::deque<WPointF> deqTracePoint=Iter1->second;
 		hmFplTraces fplTraces;
-		theData::instance().GetTotalAircraftTracePtr()->GetTraces(fplTraces);
+		theData::instance().GetTotalAircrafTracePtr()->GetTraces(fplTraces);
 		//theData::instance().GetAircraftTrace(fplTraces);
 		if(!fplTraces.empty()){
 			hmFplTraces::iterator Iter2=fplTraces.find(iTraceID);
@@ -183,7 +184,7 @@ void  NetDataDispenser::_CollisionDectect_Aux( int iTraceID1,int iTraceID2 )
    //判定两个航空器是否在冲突范围之内
    //固定其中一个点，找出另一个点的下一个坐标，计算机距离
 	hmFplTraces fplTraces;
-	theData::instance().GetTotalAircraftTracePtr()->GetTraces(fplTraces);
+	theData::instance().GetTotalAircrafTracePtr()->GetTraces(fplTraces);
 	//theData::instance().GetAircraftTrace(fplTraces);
 	hmFplTraces::iterator AircraftTrace1=fplTraces.find(iTraceID1);
 	hmFplTraces::iterator AircraftTrace2=fplTraces.find(iTraceID2);
@@ -246,7 +247,7 @@ void NetDataDispenser::_DisPenserTraceToClient()
 			}
 			   
 			std::deque<WPointF> TracePoint;
-			theData::instance().GetTotalAircraftTracePtr()->GetAircraftTracePoint1(*Iter,TracePoint);
+			theData::instance().GetTotalAircrafTracePtr()->GetAircraftTracePoint1(*Iter,TracePoint);
 			//theData::instance().GetAircraftTracePoint1(*Iter,TracePoint);
 			WPointF postion=TracePoint.front();
 			hmFplTraces::iterator traceIter=m_hmTrace.find(*Iter);

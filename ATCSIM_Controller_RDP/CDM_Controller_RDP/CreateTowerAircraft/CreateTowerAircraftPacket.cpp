@@ -50,7 +50,8 @@ void CreateTowerAircraftPacket::slot_RecvPlanAircraftPacket()
 	std::vector<PublicDataStruct::SFlyPlanFromDB> vecFlyPlanFromDB;
 	boost::shared_mutex sMutex;
 	sMutex.lock();
-	theApp::instance().GetDataManagerPtr()->GetFlyPlan(vecFlyPlanFromDB);
+	theData::instance().GetPublicDataPtr()->SetVecFlyPlanFromDB(vecFlyPlanFromDB);
+	//theApp::instance().GetDataManagerPtr()->GetFlyPlan(vecFlyPlanFromDB);
 	sMutex.unlock();
 	//遍历存放飞行计划的容器，并最终组建TowerAircraftPacket
 	if(! vecFlyPlanFromDB.empty())
@@ -135,9 +136,9 @@ void CreateTowerAircraftPacket::CreateTowerFlightPlan(PublicDataStruct::SFlyPlan
 void CreateTowerAircraftPacket::GateAllocate_New(PublicDataStruct::GateInformationStruct& gateInformation)
 {
 	QStringList GateInformationStringList;
-	while(m_iCount<theData::instance().GetGateInformation_New().size()){
+	while(m_iCount<theData::instance().GetPublicDataPtr()->GetGateInformation_New().size()){
 
-		GateInformationStringList = theData::instance().GetGateInformation_New().at(m_iCount);
+		GateInformationStringList = theData::instance().GetPublicDataPtr()->GetGateInformation_New().at(m_iCount);
 		//飞机位被占,无法给进港飞机分配停机位
 		if("1" == GateInformationStringList.at(9))
 		{
@@ -151,7 +152,7 @@ void CreateTowerAircraftPacket::GateAllocate_New(PublicDataStruct::GateInformati
 		CQMutex mutex;
 		mutex.MyLock();
 		const QString flag("1");
-		theData::instance().GetGateInformation_New().at(m_iCount).replace(9,flag);
+		theData::instance().GetPublicDataPtr()->GetGateInformation_New().at(m_iCount).replace(9,flag);
 		mutex.MyUnlock();
 		++ m_iCount;//指向下一个停机位
 		gateInformation.dLongtitude = GateInformationStringList.at(1).toDouble();//纬度
@@ -320,7 +321,7 @@ void CreateTowerAircraftPacket::CreateTowerAircraft( PublicDataStruct::TowerFlig
 	GetPathPoint(m_GateInformationStruct.sGateName,pathPointList);
 	if(!pathPointList.empty())
 	{
-		theData::instance().SetPathPoint(m_TowerAircraftStruct.TowerplanFlight.iFlightPlanId,pathPointList);
+		theData::instance().GetPublicDataPtr()->SetPathPoint(m_TowerAircraftStruct.TowerplanFlight.iFlightPlanId,pathPointList);
 
 	}
 	//打印TowerAircraftPacket的信息
@@ -329,7 +330,7 @@ void CreateTowerAircraftPacket::CreateTowerAircraft( PublicDataStruct::TowerFlig
 	//存储飞机包，iFlightPlanId用于标识一个飞行计划
 	CQMutex mutex;
 	mutex.MyLock();
-	theData::instance().GetMapTowerAircraftPacket().insert(std::make_pair(m_TowerAircraftStruct.TowerplanFlight.iFlightPlanId,m_TowerAircraftStruct));
+	theData::instance().GetPublicDataPtr()->GetMapTowerAircraftPacket().insert(std::make_pair(m_TowerAircraftStruct.TowerplanFlight.iFlightPlanId,m_TowerAircraftStruct));
 	mutex.MyUnlock();
 	emit sig_StartPathPlaning(m_TowerAircraftStruct.TowerplanFlight.iFlightPlanId);
 	//ParaseAircraftPacketByTime();
@@ -348,11 +349,12 @@ void CreateTowerAircraftPacket::GetPathPoint( const QString& sGateName,QStringLi
 	{
 		//离场飞机，读取从停机位到起飞点的路径点信息
 	case PublicDataStruct::CDM_DEP_PLAN:
-		theData::instance().GetPathInformation(mapPathInformation,2);
+		theData::instance().GetPublicDataPtr()->GetPathInformation(mapPathInformation,2);
+		//theData::instance().GetPathInformation(mapPathInformation,2);
 		break;
 	//进场飞机	
 	case  PublicDataStruct::CDM_ARR_PLAN:
-		theData::instance().GetPathInformation(mapPathInformation,1);
+		theData::instance().GetPublicDataPtr()->GetPathInformation(mapPathInformation,1);
 		break;
 	}
 	std::multimap<QString,QStringList>::iterator Iter = mapPathInformation.find(sGateName);
@@ -365,7 +367,7 @@ void CreateTowerAircraftPacket::GetPathPoint( const QString& sGateName,QStringLi
 void CreateTowerAircraftPacket::ParaseAircraftPacketByTime()
 {
 	//遍历存放飞机包的容器，如果计划到了当前时间，则对其航迹进行路径规划
-	MapTowerAircraftPacket &tmp = theData::instance().GetMapTowerAircraftPacket();
+	MapTowerAircraftPacket &tmp = theData::instance().GetPublicDataPtr()->GetMapTowerAircraftPacket();
 	if(tmp.empty())
 	{
 		return;

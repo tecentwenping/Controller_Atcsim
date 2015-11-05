@@ -2,6 +2,7 @@
 #include "AircraftInfo.h"
 #include "Manager/DataManager.h"
 #include "public/printFunc.h"
+#include "PathPlaning/TotalAircraftTrace.h"
 #include <boost/make_shared.hpp>
 #include "Interface/theApp.h"
 //#include "public/ControllerAcftInfo.h"
@@ -42,7 +43,7 @@ void AircraftTrace::ComputPRLPos( int iTraceID )
 {
 	//首先根据航班号查找轨迹点
 	QStringList pathPointList;
-	theData::instance().GetPathPoint(iTraceID,pathPointList);
+	theData::instance().GetPublicDataPtr()->GetPathPoint(iTraceID,pathPointList);
 	if(pathPointList.empty())
 	{
 		return;
@@ -54,7 +55,7 @@ void AircraftTrace::ComputPRLPos( int iTraceID )
 	// vTracePos.reserve(5000);
 	MapFixPoint mpFixPoint;
 	double dX_0 = 0.0,dY_0 = 0.0,dX_1 = 0.0,dY_1 = 0.0;
-	theData::instance().GetMapFixPoint(mpFixPoint);
+	theData::instance().GetPublicDataPtr()->GetMapFixPoint(mpFixPoint);
 
 
 
@@ -124,7 +125,8 @@ void AircraftTrace::ComputPRLPos( int iTraceID )
 		}
 	// theApp::instance().GetDataManagerPtr()->SetTracePoint(iTraceID,vTracePos);
 
-	 theApp::instance().GetDataManagerPtr()->SetAircraftTracePoint1(iTraceID,dTracePos);
+	 //theApp::instance().GetDataManagerPtr()->SetAircraftTracePoint1(iTraceID,dTracePos);
+	 theData::instance().GetTotalAircrafTracePtr()->UpdateAircraftTracePoint1(iTraceID,dTracePos);
 	 //打印所有点
 	 printTrace(iTraceID,dTracePos);
 

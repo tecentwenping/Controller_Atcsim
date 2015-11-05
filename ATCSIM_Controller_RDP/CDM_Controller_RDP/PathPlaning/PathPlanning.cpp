@@ -6,6 +6,7 @@
 #include "AircraftInfo.h"
 #include "Interface/theApp.h"
 #include "Manager/NetManager.h"
+#include "PathPlaning/TotalAircraftTrace.h"
 #include "Net/NetDataDispenser.h"
 #include <valarray>
 #include <iostream>
@@ -70,7 +71,7 @@ void CPathPlanning::GetPlanBaseInformation( const PublicDataStruct::TowerAircraf
 	 SettAircraftTraceDefaulValue(*pTrace);
 	// 存储航迹点
 	m_traceCheckLocker.lock();
-	theData::instance().SetAircraftTrace(pTrace->m_nTraceID,pTrace);
+	theData::instance().GetTotalAircrafTracePtr()->UpdateAircraftTrace(pTrace->m_nTraceID,pTrace);
 	m_traceCheckLocker.unlock();
 	theApp::instance().GetNetManagerPtr()->GetNetDataDispenserPtr()->UpdateAircraftTrace(pTrace);
 	m_isFinished = true;
@@ -82,7 +83,7 @@ void CPathPlanning::slot_StartPathPlaning(int iFlightID)
 		// 	   //获得存放塔台飞机包的映射表
 
 		MapTowerAircraftPacket temp; 
-		theData::instance().GetMapTowerAircraftPacket(temp);
+		theData::instance().GetPublicDataPtr()->GetMapTowerAircraftPacket(temp);
 		// 	   //查找指定ID的塔台飞机包
 		MapTowerAircraftPacket::iterator Iter = temp.find(iFlightID);
 		if(Iter != temp.end())

@@ -40,7 +40,7 @@ void CInitPointInformation::GetFixPointFromDB()
 		
 	}
 	mutex.MyLock();
-	theData::instance().SetMapFixPoint(mpFixPoint);
+	theData::instance().GetPublicDataPtr()->SetFixPoint(mpFixPoint);
 	mutex.MyUnlock();
 }
 void CInitPointInformation::GetTaxiLineFromDB()
@@ -65,7 +65,7 @@ void CInitPointInformation::GetTaxiLineFromDB()
 		mpTaxiLine.insert(std::make_pair(TaxiLineStructTemp.GetRoadID(),TaxiLineStructTemp));
 	}
 	mutex.MyLock();
-	theData::instance().SetMapTaxLine(mpTaxiLine);
+	theData::instance().GetPublicDataPtr()->SetTaxiLine(mpTaxiLine);
 	mutex.MyUnlock();
 }
 QSqlQuery& CInitPointInformation::QueryDataFromDB( const QString& sqlStr )

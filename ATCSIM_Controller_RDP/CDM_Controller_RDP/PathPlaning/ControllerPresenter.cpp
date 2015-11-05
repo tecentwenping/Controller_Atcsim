@@ -3,6 +3,7 @@
 #include "TotalAircraftTrace.h"
 #include "public/coordinate.h"
 #include "Manager/DataManager.h"
+#include "public/PublicData.h"
 #include <iostream>
 ControllerPresenter::ControllerPresenter()
 
@@ -13,7 +14,7 @@ ControllerPresenter::ControllerPresenter()
 	}
 	double vDCenterLongtitude = 0.00;
 	double vDCenterLatitude = 0.00;
-	theData::instance().GetCenterCoordinate(vDCenterLongtitude,vDCenterLatitude);
+	theData::instance().GetPublicDataPtr()->SetCenterCoordinate(vDCenterLongtitude,vDCenterLatitude);
 	if(! m_pCoordinate)
 	{
 		m_pCoordinate = boost::make_shared<Coordinate>(vDCenterLongtitude,vDCenterLatitude);
