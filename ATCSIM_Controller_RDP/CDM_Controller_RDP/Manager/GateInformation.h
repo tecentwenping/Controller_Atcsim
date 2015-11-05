@@ -6,6 +6,7 @@ class CGateInformation:public CFile
 public:
 	CGateInformation();
 	~CGateInformation();
-	void ReadInformationFromFile();
+	void ReadGateInformation();
+	//void ReadInformationFromFile();
 };
 #endif // GATEINFORMATION_H

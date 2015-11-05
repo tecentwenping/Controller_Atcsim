@@ -31,14 +31,15 @@ void CDataManager::Init()
  	{
  		qDebug()<<"Reading GateInformation.....";
  		m_pInitGateInformation = boost::make_shared<CGateInformation>();
-        m_pInitGateInformation.get()->ReadInformationFromFile();
+		m_pInitGateInformation.get()->ReadGateInformation();
+       // m_pInitGateInformation.get()->ReadInformationFromFile();
  	}
-	/*if(! m_pInitPathInformation)
-	{
-		qDebug()<<"Reading PathInformation....";
-		m_pInitPathInformation = boost::make_shared<CInitPathInformation>();
-		m_pInitPathInformation.get()->ReadInformationFromFile();
-	}*/
+	//if(! m_pInitPathInformation)
+	//{
+	//	qDebug()<<"Reading PathInformation....";
+	//	m_pInitPathInformation = boost::make_shared<CInitPathInformation>();
+	//	m_pInitPathInformation.get()->ReadInformationFromFile();
+	//}
 	if(! m_pInitPointInformaton)
 	{
 		qDebug()<<"Reading PointInformation.....";
@@ -94,7 +95,9 @@ void CDataManager::SetAircraftTrace( int iTraceno, AircraftTrace* aicraftTrace )
 
 void CDataManager::GetAircraftTrace( hmFplTraces& hmFplTrace )
 {
-	m_pTotalTrace->GetTraces(hmFplTrace);
+	//int i=0;
+	//print("%d\n",i);
+	//m_pTotalTrace->GetTraces(hmFplTrace);
 
 }
 TotalAircraftTrace* CDataManager::GetTotalAircraftTracePtr()
@@ -103,7 +106,7 @@ TotalAircraftTrace* CDataManager::GetTotalAircraftTracePtr()
 	{
 	   return m_pTotalTrace.get();
 	}
-	return NULL;
+	return boost::make_shared<TotalAircraftTrace>().get();
 }
 void CDataManager::GetFlyPlan( std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan )
 {
@@ -114,20 +117,30 @@ void CDataManager::SetFlyPlan(std::vector<PublicDataStruct::SFlyPlanFromDB>& vec
 	m_pPublicData.get()->SetVecFlyPlanFromDB(vecFlyPlan);
 }
 
-void CDataManager::SetGateInformation(const VecGateInformation& vecGateInformation,int flag )
+//void CDataManager::SetGateInformation(const VecGateInformation& vecGateInformation,int flag )
+//{
+//	switch(flag)
+//	{
+//	case 1:
+//		m_pPublicData.get()->SetGateInformation_T1(vecGateInformation);
+//		break;
+//	case  2:
+//		m_pPublicData.get()->SetGateInformation_T2(vecGateInformation);
+//		break;
+//	}
+//}
+void CDataManager::SetGateInformation_New(const VecGateInformation& vecGateInformation)
 {
-	switch(flag)
-	{
-	case 1:
-		m_pPublicData.get()->SetGateInformation_T1(vecGateInformation);
-		break;
-	case  2:
-		m_pPublicData.get()->SetGateInformation_T2(vecGateInformation);
-		break;
-	}
+       m_pPublicData.get()->SetGateInformation_New(vecGateInformation);
 }
-
-
+void CDataManager::GetGateInformation_New(VecGateInformation& vecGateInformation)
+{
+		m_pPublicData.get()->GetGateInformation_New(vecGateInformation);
+}
+VecGateInformation& CDataManager::GetGateInformation_New()
+{
+	    return m_pPublicData.get()->GetGateInformation_New();
+}
 void CDataManager::SetPathInformation( const MapPath& mapPath,int flag )
 {
 	switch(flag)
@@ -156,24 +169,24 @@ void CDataManager::GetPathInformation( MapPath& mapPath,int flag )
 	m_pPublicData.get()->GetPathInformation(mapPath,flag);
 }
 
-void CDataManager::GetGateInformation_T1( VecGateInformation& vecGateInformation )
-{
-	m_pPublicData.get()->GetGateInformation_T1(vecGateInformation);
-
-}
-VecGateInformation& CDataManager::GetGateInformation_T1()
-{
-	return m_pPublicData.get()->GetGateInformation_T1();
-}
-void CDataManager::GetGateInformation_T2( VecGateInformation& vecGateInformation )
-{
-	m_pPublicData.get()->GetGateInformation_T2(vecGateInformation);
-
-}
-VecGateInformation& CDataManager::GetGateInformation_T2()
-{
-	return m_pPublicData.get()->GetGateInformaiton_T2();
-}
+//void CDataManager::GetGateInformation_T1( VecGateInformation& vecGateInformation )
+//{
+//	m_pPublicData.get()->GetGateInformation_T1(vecGateInformation);
+//
+//}
+//VecGateInformation& CDataManager::GetGateInformation_T1()
+//{
+//	return m_pPublicData.get()->GetGateInformation_T1();
+//}
+//void CDataManager::GetGateInformation_T2( VecGateInformation& vecGateInformation )
+//{
+//	m_pPublicData.get()->GetGateInformation_T2(vecGateInformation);
+//
+//}
+//VecGateInformation& CDataManager::GetGateInformation_T2()
+//{
+//	return m_pPublicData.get()->GetGateInformaiton_T2();
+//}
 void CDataManager::GetMapGateName( MapGateName& mapGateName )
 {
 	m_pPublicData.get()->GetMapGateName(mapGateName);
@@ -243,4 +256,9 @@ void CDataManager::GetAircraftTracePoint1( int traceID, std::deque<WPointF>& dTr
 {
 	m_pTotalTrace.get()->GetAircraftTracePoint1(traceID,dTrace);
 
+}
+
+TotalAircraftTracePtr CDataManager::GetTotalAircraftTracePtr_New()
+{
+   return m_pTotalTrace;
 }

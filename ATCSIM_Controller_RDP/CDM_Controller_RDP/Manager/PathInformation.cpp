@@ -12,10 +12,10 @@ CInitPathInformation::~CInitPathInformation()
 void CInitPathInformation::ReadInformationFromFile( )
 {
 
-	QString qInPathFileName("./InPATH.txt");
+	/*QString qInPathFileName("./InPATH.txt");
 	QString qOutPathFileName("./OutPATH.txt");
 
-	typedef std::map<QString,QStringList> mapGateInformation;
+	typedef std::multimap<QString,QStringList> mapGateInformation;
 	mapGateInformation mapInPathInformation,mapOutPathInformation;
 	GetInfoFromFile(qInPathFileName,mapInPathInformation);
 	GetInfoFromFile(qOutPathFileName,mapOutPathInformation);
@@ -26,6 +26,6 @@ void CInitPathInformation::ReadInformationFromFile( )
 	if(! mapOutPathInformation.empty())
 	{
 		theData::instance().SetPathInformation(mapOutPathInformation,2);
-	}
+	}*/
 
 }

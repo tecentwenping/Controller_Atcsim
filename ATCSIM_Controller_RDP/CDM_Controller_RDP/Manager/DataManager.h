@@ -43,7 +43,7 @@ typedef std::multimap<QString,QString>								MapGateName;
 typedef std::multimap<int,PublicDataStruct::TaxiLine>				MapTaxiLine;
 typedef std::multimap<std::string,PublicDataStruct::FixPoint>		MapFixPoint;
 typedef std::map<int,PublicDataStruct::TowerAircraftPacketStruct>	MapTowerAircraftPacket;
-typedef std::map<QString,QStringList>								MapPath;
+typedef std::multimap<QString,QStringList>								MapPath;
 ////////////////////////////////////////////////////////////////////////////////////////////
 typedef stdext::hash_map<int,std::deque<WPointF> >					hmFplTracePoint;
 class CDataManager
@@ -55,10 +55,10 @@ public:
 	void	  Init();
 public:
 	void					GetCenterCoordinate(double& dCenterLongtitude,double& dLatitude);//设置机场中心坐标（默认为双流机场）
-	void					GetGateInformation_T1(VecGateInformation& vecGateInformation);//获取T1航站楼停机位信息
-	void					GetGateInformation_T2(VecGateInformation& vecGateInformation);//获取T2航站楼停机位信息
-	VecGateInformation&		GetGateInformation_T1();
-	VecGateInformation&     GetGateInformation_T2();
+	//void					GetGateInformation_T1(VecGateInformation& vecGateInformation);//获取T1航站楼停机位信息
+	//void					GetGateInformation_T2(VecGateInformation& vecGateInformation);//获取T2航站楼停机位信息
+	//VecGateInformation&		GetGateInformation_T1();
+	//VecGateInformation&     GetGateInformation_T2();
 	void					GetMapGateName(MapGateName& mapGateName);//获取停机位名称
 	void					GetMapTaxiLine(MapTaxiLine& mapTaxiLine);//获取滑行道
 	void					GetMapFixPoint(MapFixPoint& mapFixPoint);//获取固定点
@@ -77,7 +77,7 @@ public:
 	//void					SetTracePoint(int iTraceno,const std::vector<WPointF>& vecTracePoint);
 	void					SetPathInformation(const MapPath& mapPath,int flag);
 	void					SetFlyPlan(std::vector<PublicDataStruct::SFlyPlanFromDB>& vecFlyPlan);
-	void					SetGateInformation(const VecGateInformation& vecGateInformation,int flag);
+	//void					SetGateInformation(const VecGateInformation& vecGateInformation,int flag);
 	void					SetPathPoint(int iFlyID,QStringList& vecPathPoint);
 	void					SetAircraftTrace(int iTraceno,AircraftTrace* aicraftTrace);
 	void					SetMapFixPoint(const MapFixPoint& mpFixPoint);
@@ -88,6 +88,9 @@ public:
 	//===================================================================================
 	void					SetAircraftTracePoint1(int traceID,const std::deque<WPointF>& dTrace);
 	void					GetAircraftTracePoint1(int traceID, std::deque<WPointF>& dTrace);
+    void					GetGateInformation_New(VecGateInformation& vecGateInformation);
+	void					SetGateInformation_New(const VecGateInformation& vecGateInformation);
+	VecGateInformation&     GetGateInformation_New();
 private:
 	FilePtr					m_pInitGateInformation;//停机位信息
 	FilePtr					m_pInitPathInformation;//路径信息
@@ -96,6 +99,8 @@ private:
 	TotalAircraftTracePtr	m_pTotalTrace;
 	TotalAircraftTrace      *m_pTotalTracePtr;
 	TaxiLineInformationPtr  m_pTaxLineInformation;
+public:
+	TotalAircraftTracePtr	GetTotalAircraftTracePtr_New();
 };
 //创建数据管理器单件
 typedef singleton_default<CDataManager> theData;

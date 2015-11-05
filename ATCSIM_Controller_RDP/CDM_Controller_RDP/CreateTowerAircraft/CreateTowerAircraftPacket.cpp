@@ -20,6 +20,10 @@ double CreateTowerAircraftPacket:: m_initialLongtitue_T1=1.8140786372526054;
 double CreateTowerAircraftPacket::m_initilaLatitue_T1=0.5334360886950167;
 double CreateTowerAircraftPacket::m_initialLongtitue_T2=1.8139889250182442;
 double CreateTowerAircraftPacket::m_initilaLatitue_T2=0.5326736899541124;
+////////////////////////////////////////////////////////////////////////////////////
+#include <QTime>
+#include "public/Tools.h"
+////////////////////////////////////////////////////////////////////////////////////
 CreateTowerAircraftPacket::CreateTowerAircraftPacket()
 {
 	m_iFlyPlanID = 1;//FlyID由程序指定，从1开始编号，依次递增
@@ -124,38 +128,22 @@ void CreateTowerAircraftPacket::CreateTowerFlightPlan(PublicDataStruct::SFlyPlan
 	//	m_enumTerminate_T = PublicDataStruct::T2_TERMINATE;
 	//}
 	//将从数据库读取的飞行计划转换为飞行计划
-	ConvertFlyPlanFromDBToTowerFlightPlan(flyPlanFromDB,towerFlightPlanStruct);
+	//ConvertFlyPlanFromDBToTowerFlightPlan(flyPlanFromDB,towerFlightPlanStruct);
+
+	ConvertFlyPlanFromDBToTowerFlightPlan_Test(flyPlanFromDB,towerFlightPlanStruct);
 }
-void CreateTowerAircraftPacket::GateAllocate( PublicDataStruct::PLAN_TERMINATE enumTerminate_T,PublicDataStruct::GateInformationStruct& gateInformation )
+void CreateTowerAircraftPacket::GateAllocate_New(PublicDataStruct::GateInformationStruct& gateInformation)
 {
 	QStringList GateInformationStringList;
-	switch(enumTerminate_T)
-	{
-	case PublicDataStruct::T1_TERMINATE:
-		while(m_iCount < theData::instance().GetGateInformation_T1().size())
-		{
-			GateInformationStringList = theData::instance().GetGateInformation_T1().at(m_iCount);
-			//飞机位被占,无法给进港飞机分配停机位
-			if("1" == GateInformationStringList.at(9))
-			{
-				++ m_iCount;
-			}
+	while(m_iCount<theData::instance().GetGateInformation_New().size()){
 
-			else break;
-		}
-		break;
-	case PublicDataStruct::T2_TERMINATE:
-		while(m_iCount < theData::instance().GetGateInformation_T2().size())
+		GateInformationStringList = theData::instance().GetGateInformation_New().at(m_iCount);
+		//飞机位被占,无法给进港飞机分配停机位
+		if("1" == GateInformationStringList.at(9))
 		{
-			GateInformationStringList = theData::instance().GetGateInformation_T2().at(m_iCount);
-			//飞机位被占,无法给进港飞机分配停机位
-			if("1" == GateInformationStringList.at(9))
-			{
-				++ m_iCount;
-			}
-			else break;
+			++ m_iCount;
 		}
-		break;
+		else break;
 	}
 	if(! GateInformationStringList.empty())
 	{
@@ -163,16 +151,7 @@ void CreateTowerAircraftPacket::GateAllocate( PublicDataStruct::PLAN_TERMINATE e
 		CQMutex mutex;
 		mutex.MyLock();
 		const QString flag("1");
-		switch(enumTerminate_T)
-		{
-		case PublicDataStruct::T1_TERMINATE:
-
-			theData::instance().GetGateInformation_T1().at(m_iCount).replace(9,flag);
-			break;
-		case PublicDataStruct::T2_TERMINATE:
-			theData::instance().GetGateInformation_T2().at(m_iCount).replace(9,flag);
-			break;
-		}
+		theData::instance().GetGateInformation_New().at(m_iCount).replace(9,flag);
 		mutex.MyUnlock();
 		++ m_iCount;//指向下一个停机位
 		gateInformation.dLongtitude = GateInformationStringList.at(1).toDouble();//纬度
@@ -191,9 +170,78 @@ void CreateTowerAircraftPacket::GateAllocate( PublicDataStruct::PLAN_TERMINATE e
 		strcpy(gateInformation.sInRunwayLine,sInRunwayLine.c_str());//进入道
 		strcpy(gateInformation.sDepRunway,sDepRunway.c_str());
 		strcpy(gateInformation.sArrRunway,sArrRunway.c_str());
-
 	}
-	 return;
+	return;
+
+}
+void CreateTowerAircraftPacket::GateAllocate( PublicDataStruct::PLAN_TERMINATE enumTerminate_T,PublicDataStruct::GateInformationStruct& gateInformation )
+{
+	//QStringList GateInformationStringList;
+	//switch(enumTerminate_T)
+	//{
+	//case PublicDataStruct::T1_TERMINATE:
+	//	while(m_iCount < theData::instance().GetGateInformation_T1().size())
+	//	{
+	//		GateInformationStringList = theData::instance().GetGateInformation_T1().at(m_iCount);
+	//		//飞机位被占,无法给进港飞机分配停机位
+	//		if("1" == GateInformationStringList.at(9))
+	//		{
+	//			++ m_iCount;
+	//		}
+
+	//		else break;
+	//	}
+	//	break;
+	//case PublicDataStruct::T2_TERMINATE:
+	//	while(m_iCount < theData::instance().GetGateInformation_T2().size())
+	//	{
+	//		GateInformationStringList = theData::instance().GetGateInformation_T2().at(m_iCount);
+	//		//飞机位被占,无法给进港飞机分配停机位
+	//		if("1" == GateInformationStringList.at(9))
+	//		{
+	//			++ m_iCount;
+	//		}
+	//		else break;
+	//	}
+	//	break;
+	//}
+	//if(! GateInformationStringList.empty())
+	//{
+	//	//机位被分配后，将该机位信息的占用位设置为1
+	//	CQMutex mutex;
+	//	mutex.MyLock();
+	//	const QString flag("1");
+	//	switch(enumTerminate_T)
+	//	{
+	//	case PublicDataStruct::T1_TERMINATE:
+
+	//		theData::instance().GetGateInformation_T1().at(m_iCount).replace(9,flag);
+	//		break;
+	//	case PublicDataStruct::T2_TERMINATE:
+	//		theData::instance().GetGateInformation_T2().at(m_iCount).replace(9,flag);
+	//		break;
+	//	}
+	//	mutex.MyUnlock();
+	//	++ m_iCount;//指向下一个停机位
+	//	gateInformation.dLongtitude = GateInformationStringList.at(1).toDouble();//纬度
+	//	gateInformation.dLatitude = GateInformationStringList.at(2).toDouble();//经度
+	//	std::string sDepRunway = GateInformationStringList.at(3).toStdString();
+	//	std::string sArrRunway = GateInformationStringList.at(4).toStdString();
+	//	std::string sDepGate = GateInformationStringList.at(5).toStdString();
+	//	std::string sArrGate = GateInformationStringList.at(6).toStdString();
+	//	std::string sVacateLine = GateInformationStringList.at(7).toStdString();
+	//	std::string sInRunwayLine = GateInformationStringList.at(8).toStdString();
+	//	gateInformation.sGateName = GateInformationStringList.at(0);//停机位名
+	//	m_GateInformationStruct.sGateName = GateInformationStringList.at(0);
+	//	strcpy(gateInformation.sDepGate,sDepGate.c_str());//离场停机位
+	//	strcpy(gateInformation.sArrGate,sArrGate.c_str());//进场停机位
+	//	strcpy(gateInformation.sVacateLine,sVacateLine.c_str());//脱离道
+	//	strcpy(gateInformation.sInRunwayLine,sInRunwayLine.c_str());//进入道
+	//	strcpy(gateInformation.sDepRunway,sDepRunway.c_str());
+	//	strcpy(gateInformation.sArrRunway,sArrRunway.c_str());
+
+	//}
+	// return;
 }
 
 void CreateTowerAircraftPacket::CheckPlanState( PublicDataStruct::TowerFlightPlanStruct  &planAracrs )
@@ -227,7 +275,8 @@ void CreateTowerAircraftPacket::ConvertFlyPlanFromDBToTowerFlightPlan( PublicDat
 	///////////////////////////////////////////////////////////////////////
 	//打印数据库中读出的信息
 	PrintInfomation<std::string>(FlightPlanFromDB.toString());
-	GateAllocate(m_enumTerminate_T,m_GateInformationStruct);
+	GateAllocate_New(m_GateInformationStruct);
+	//GateAllocate(m_enumTerminate_T,m_GateInformationStruct);
 	TowerFlightPlan.iFlightPlanId = m_iFlyPlanID; ++ m_iFlyPlanID;//航班ID加1
     strcpy(TowerFlightPlan.sFlightNum,FlightPlanFromDB.sFlyPlanNum.c_str());//航班号
 	strcpy( TowerFlightPlan.sSSRCode,FlightPlanFromDB.sSSRCode.c_str());//二次码
@@ -237,7 +286,7 @@ void CreateTowerAircraftPacket::ConvertFlyPlanFromDBToTowerFlightPlan( PublicDat
 	strcpy( TowerFlightPlan.sArrRunway,m_GateInformationStruct.sArrRunway);//降落跑道
 	strcpy( TowerFlightPlan.sDepRunway,m_GateInformationStruct.sDepRunway);//起飞跑道
 	strcpy( TowerFlightPlan.sDepartureTime,FlightPlanFromDB.sDepartureTime.c_str());//预计起飞时间
-	strcpy( TowerFlightPlan.sArrivalTime,FlightPlanFromDB.sAArrTime.c_str());//预计降落时间
+	strcpy( TowerFlightPlan.sArrivalTime,FlightPlanFromDB.sArrivalTime.c_str());//预计降落时间
 	strcpy( TowerFlightPlan.sDepGate,m_GateInformationStruct.sDepGate);//离场停机位
 	strcpy( TowerFlightPlan.sArrGate,m_GateInformationStruct.sArrGate);//进场停机位
 	strcpy( TowerFlightPlan.sVacateLine,m_GateInformationStruct.sVacateLine);//脱离道
@@ -294,7 +343,7 @@ void CreateTowerAircraftPacket::GetPathPoint( const QString& sGateName,QStringLi
 		后期需要从数据库中直接加载
 	*/
 	///////////////////////////////////////////////////////////
-	std::map<QString,QStringList> mapPathInformation;//所有的路径信息
+	std::multimap<QString,QStringList> mapPathInformation;//所有的路径信息
 	switch(m_PlanType)
 	{
 		//离场飞机，读取从停机位到起飞点的路径点信息
@@ -306,7 +355,7 @@ void CreateTowerAircraftPacket::GetPathPoint( const QString& sGateName,QStringLi
 		theData::instance().GetPathInformation(mapPathInformation,1);
 		break;
 	}
-	std::map<QString,QStringList>::iterator Iter = mapPathInformation.find(sGateName);
+	std::multimap<QString,QStringList>::iterator Iter = mapPathInformation.find(sGateName);
 	if(Iter != mapPathInformation.end())
 	{
 		PathPointList = Iter->second;
@@ -349,4 +398,24 @@ void CreateTowerAircraftPacket::ParaseAircraftPacketByTime()
 void CreateTowerAircraftPacket::slot_ReTranslateTowerAircraftPacket( int iFlightID )
 {
 	emit sig_StartPathPlaning(m_TowerAircraftStruct.TowerplanFlight.iFlightPlanId);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+void CreateTowerAircraftPacket::ConvertFlyPlanFromDBToTowerFlightPlan_Test(PublicDataStruct::SFlyPlanFromDB& source, 
+																		   PublicDataStruct::TowerFlightPlanStruct& dest)
+{
+
+	ConvertFlyPlanFromDBToTowerFlightPlan(source,dest);
+	QTime currentTime=QTime::currentTime();
+	int currentHour=currentTime.hour();
+	int currentMin=currentTime.minute();
+	std::string hourStr,minStr,timeStr;
+	CTools::ConvertInt2String(currentHour,hourStr);
+	CTools::ConvertInt2String(currentMin,minStr);
+	timeStr=hourStr+minStr;
+	strcpy(dest.sArrivalTime,timeStr.c_str());
+	strcpy(dest.sDepartureTime,timeStr.c_str());
+	//dest.sArrivalTime=timeStr;
 }

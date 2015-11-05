@@ -25,7 +25,7 @@ typedef std::multimap<std::string,PublicDataStruct::FixPoint>		MapFixPoint;
 typedef std::map<int,PublicDataStruct::TowerAircraftPacketStruct>	MapTowerAircraftPacket;
 typedef std::vector<PublicDataStruct::SFlyPlanFromDB>				VecFlyPlanFromDB;
 typedef std::map<int,QStringList >									MapPathPoint;
-typedef std::map<QString,QStringList>								MapPath;
+typedef std::multimap<QString,QStringList>								MapPath;
 class CPublicData
 {
 private:
@@ -45,13 +45,16 @@ private:
 	 static MapPath						m_MapOutPath;
 	 static MapAircraftTrace			m_mapAircraftTrace;//存放航迹的映射表
 	 static std::vector<QString>		m_vecCurrentFlyPlan;
+
+	 ///////////////////////////////////////////////////////////////////////////////
+	 static VecGateInformation			m_vecGateInformation;//所有停机位信息
 public:
 	CPublicData();
 	CPublicData(double dCenterLongtitude,double dCenterLatitude);
 	~CPublicData();
 	void					SetCenterCoordinate(double& dCenterLongtitude,double& dCenterLatitude);
-	void					SetGateInformation_T1(const VecGateInformation& VecGateInformation);
-	void					SetGateInformation_T2(const VecGateInformation& VecGateInformation);
+	/*void					SetGateInformation_T1(const VecGateInformation& VecGateInformation);
+	void					SetGateInformation_T2(const VecGateInformation& VecGateInformation);*/
 	void					SetGateName(const MapGateName& mapGateName);
 	void					SetTaxiLine(const MapTaxiLine& mapTaxiLine);
 	void					SetFixPoint(const MapFixPoint& mapFixPoint);
@@ -73,14 +76,17 @@ public:
 	void					GetMapAircraftTrace(MapAircraftTrace&);
 	void					GetVecFlyPlanFromDB(VecFlyPlanFromDB& vecFlyPlanFromDB);
 	void					SetVecFlyPlanFromDB(VecFlyPlanFromDB& vecFlyPlanFromDB);
-	void					GetGateInformation_T1(VecGateInformation& vecGateInforamtion);
+	/*void					GetGateInformation_T1(VecGateInformation& vecGateInforamtion);
 	void					GetGateInformation_T2(VecGateInformation& vecGateInformation);
 	VecGateInformation&     GetGateInformation_T1();
-	VecGateInformation&		GetGateInformaiton_T2();
+	VecGateInformation&		GetGateInformaiton_T2();*/
 	void					GetCurrentFlyPlan(std::vector<QString>& vecCurFLyPlan);
 
 	//////////////////////////////////////////////////////////////////////////////////
 	void				GetPathInformation_New(MapPath&,int flag);
+	void				SetGateInformation_New(const VecGateInformation& vecGateInformation);
+	void				GetGateInformation_New(VecGateInformation& vecGateInforamtion);
+	VecGateInformation&	GetGateInformation_New();
 
 
 };

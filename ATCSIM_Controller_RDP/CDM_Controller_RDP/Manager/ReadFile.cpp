@@ -51,7 +51,7 @@ void CFile::GetInfoFromFile( const QString &qFileName,std::vector<QStringList>& 
 	}
 }
 
-void CFile::ReadInformationFromFile()
+void CFile::ReadGateInformation()
 {
 
 }

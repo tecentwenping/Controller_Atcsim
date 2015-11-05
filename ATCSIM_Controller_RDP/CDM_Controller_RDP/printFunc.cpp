@@ -22,10 +22,10 @@ void printAircraftPoint(const AircraftTrace& aircraftTrace)
 void printTrace( int iFlightID,std::deque<WPointF>& Trace )
 {
 		std::deque<WPointF>::iterator Iter=Trace.begin();
-		while(Iter++!=Trace.end()){
-	
-			std::cout<<"iFlightID:"<<iFlightID<<":("<<(*Iter).rx()<<","<<(*Iter).ry()<<"),";
-	
+		std::cout<<"Print Aircraft Trace:FlightID:"<<iFlightID;
+		while(Iter!=Trace.end()){
+			std::cout<<"("<<(*Iter).rx()<<","<<(*Iter).ry()<<"),";
+			++Iter;
 		}
 		std::cout<<std::endl;
 }

@@ -43,9 +43,9 @@ AircraftTrace* TotalAircraftTrace::GetCurAircraftTrace()
 void TotalAircraftTrace::GetTraces( hmFplTraces& traces )
 {
 	boost::shared_mutex vMutex;
-	vMutex.lock();
-   traces = m_hmTraces;
-   vMutex.unlock();
+	//vMutex.lock();
+		traces = m_hmTraces;
+  // vMutex.unlock();
 }
 
 void TotalAircraftTrace::ClearTraces()
@@ -90,7 +90,8 @@ void TotalAircraftTrace::UpdateTracksType( int nRadarType )
 
 void TotalAircraftTrace::UpdateAircraftTracePoint1( int iTraceno,const std::deque<WPointF>& dTracePoint )
 {
-       m_hmTracePoint1[iTraceno]=dTracePoint;
+      //m_hmTracePoint1[iTraceno]=dTracePoint;
+	  
 }
 
 void TotalAircraftTrace::GetAircraftTracePoint1( int iTraceno,std::deque<WPointF>& dTracePoint )

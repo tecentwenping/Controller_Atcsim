@@ -21,6 +21,7 @@ class TotalAircraftTrace
 public:
 	typedef stdext::hash_map<int,AircraftTrace*> hmFplTraces;
 	typedef stdext::hash_map<int,std::vector<WPointF> > hmFplTracePoint;//´æ·Åº½¼£µã¹þÏ£±í
+	//std::map <int,std::deque<WPointF> > 
 	typedef stdext::hash_map<int,std::deque<WPointF> > hmFplTracePoint1;
 	typedef std::map<int,AircraftTrace*> mpFplTraces;
 

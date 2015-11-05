@@ -60,7 +60,7 @@ void AircraftTrace::ComputPRLPos( int iTraceID )
 
 	///////////////////////////////////////////////////////////////
 	std::deque<WPointF> dTracePos;
-	dTracePos.resize(5000);
+	//dTracePos.resize(5000);
 	///////////////////////////////////////////////////////////////
 	 for(int i = 1; i != pathPointList.size()-1; ++i)
 		{

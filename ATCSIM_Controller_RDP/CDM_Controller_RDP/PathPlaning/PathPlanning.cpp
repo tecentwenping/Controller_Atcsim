@@ -127,6 +127,8 @@ void CPathPlanning::SettAircraftTraceDefaulValue( AircraftTrace& vAircraftTrace 
 	vAircraftTrace.m_aircraftInfo.sType="B733";
 	vAircraftTrace.m_aircraftInfo.dCurTaxSpd=vAircraftTrace.m_dGAS;
 
+	_SetSafeDistance(vAircraftTrace);
+
 
 }
 void CPathPlanning::_SetSafeDistance( AircraftTrace& aircraft )

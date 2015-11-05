@@ -11,23 +11,28 @@
 #include <boost/thread/shared_mutex.hpp>
 #include <QTime>
 #include <algorithm>
+#include <QTimer>
+//#include <QTest>
 const double PI=3.1415926;
 NetDataDispenser::NetDataDispenser():m_bInitDataSucess(false)
 {  
-	//分发器加载的时候，会首先先读一次数据，看是否有航迹
-	if(InitData())
-	{
-		m_bInitDataSucess = true;//读取到了数据
-	}
+	m_aircraftStopVec.push_back(-1);
+	_Run();
 }
 NetDataDispenser::~NetDataDispenser()
 {
-
+   
+}
+void NetDataDispenser::_Run()
+{
+	QTimer timer;
+	connect(&timer,SIGNAL(timeout(300)),this,SLOT(LoadData()));
 }
 void NetDataDispenser::DispenserTraceToClient()
 { 
 	//如果并且读到数据，则直接返回，等待下一次调用
-     if(! m_bInitDataSucess)
+
+     if(!InitData())
 	 {
 		 return;
 	 }
@@ -56,7 +61,8 @@ void NetDataDispenser::UpdateAircraftTrace(AircraftTrace* pTrace )
 	 m_mpTracePointCount.insert(std::make_pair(pTrace,0));
 	 tmpMutex.unlock();
 	//重置一下航迹表和存放航迹点的容器，保持当前最新的数据
-	 m_bInitDataSucess = InitData();
+	 /*m_bInitDataSucess =*/ 
+	 InitData();
 }
 
 void NetDataDispenser::AircraftTraceToDispenser()
@@ -74,12 +80,14 @@ void NetDataDispenser::AircraftTraceToDispenser()
 		if(Iter!= mTowerAircraftPacket.end()){
 			PublicDataStruct::TowerFlightPlanStruct& towerFlightPlanStruct=(*Iter).second.TowerplanFlight;
 			int planType=towerFlightPlanStruct.iFlyPlanType;
-			std::string planTime="";
+			std::string planTime;
 			if(0==planType){//离港航班
-				  planTime=towerFlightPlanStruct.sDepartureTime;
+				  //strcpy(planTime,towerFlightPlanStruct.sDepartureTime);
+				  planTime=std::string(towerFlightPlanStruct.sDepartureTime);
 				//strcpy(planTime.c_str(),towerFlightPlanStruct.sDepartureTime);
 			}else{//进港航班
-				planTime=towerFlightPlanStruct.sArrivalTime;
+				//strcpy(planTime,towerFlightPlanStruct.sArrivalTime);
+				planTime=std::string(towerFlightPlanStruct.sArrivalTime);
 				//strcpy(planTime.c_str(),towerFlightPlanStruct.sArrivalTime);
 			}
 			currentTime=QTime::currentTime();
@@ -92,6 +100,7 @@ void NetDataDispenser::AircraftTraceToDispenser()
 			if(strcmp(planTime.c_str(),timeStr.c_str())==0)
 				m_aircrftTraceToDispenserVec.push_back(traceID);
 		}
+		++traceIter;
 	}
 }
 
@@ -106,16 +115,20 @@ void NetDataDispenser::_CollectionDetect()
    }
    //循环场面航空器，确定两个航空器之间的关系，也即前后两个点，如果两个
    //航空器之间有冲突，则要采取停等策略
-   for(unsigned int i=0;i!=m_aircrftTraceToDispenserVec.size()-1;++i){
-	   unsigned int j=1+1;
+   for(unsigned int i=0;i<m_aircrftTraceToDispenserVec.size()-1;++i){
+	   unsigned int j=i+1;
 	   //计算角度
 	   int iAngle1=CompuAngle(m_aircrftTraceToDispenserVec[i]);
-	   while(j++!=m_aircrftTraceToDispenserVec.size()){
+	   while(j!=m_aircrftTraceToDispenserVec.size()){
 		   int iAngle2=CompuAngle(m_aircrftTraceToDispenserVec[j]);
-		   if(iAngle1-iAngle2>PI/2)
-			   continue;
+		   if(iAngle1-iAngle2>90){
+			     ++j;
+				continue;
+		   }
+			   
            //计算两个航空器的距离，确定是否是在冲突范围内，并根据其在场面的先后关系，确定停等策略
 		  _CollisionDectect_Aux(m_aircrftTraceToDispenserVec[i],m_aircrftTraceToDispenserVec[j]);
+		  ++j;
 	   }
    }
 }
@@ -129,39 +142,40 @@ int NetDataDispenser::CompuAngle( int iTraceID )
 
 		std::deque<WPointF> deqTracePoint=Iter1->second;
 		hmFplTraces fplTraces;
-		theData::instance().GetAircraftTrace(fplTraces);
-		hmFplTraces::iterator Iter2=fplTraces.find(iTraceID);
-		if(Iter2!=fplTraces.end()){
+		theData::instance().GetTotalAircraftTracePtr()->GetTraces(fplTraces);
+		//theData::instance().GetAircraftTrace(fplTraces);
+		if(!fplTraces.empty()){
+			hmFplTraces::iterator Iter2=fplTraces.find(iTraceID);
+			if(Iter2!=fplTraces.end()){
 
-			std::vector< boost::shared_ptr<WPointF> > HistoryPos=Iter2->second->m_vHistoryPos;
-			
-			double dCurX=Iter2->second->m_fAbsX;
-			double dCurY=Iter2->second->m_fAbsY;
+				std::vector< boost::shared_ptr<WPointF> > HistoryPos=Iter2->second->m_vHistoryPos;
 
-			double dHistoryX=0.0,dHistoryY=0.0;
-			if(!HistoryPos.empty()){
-				
-				dHistoryX=Iter2->second->m_vHistoryPos.back().get()->rx();
-				dHistoryY=Iter2->second->m_vHistoryPos.back().get()->ry();
+				double dCurX=Iter2->second->m_fAbsX;
+				double dCurY=Iter2->second->m_fAbsY;
+
+				double dHistoryX=0.0,dHistoryY=0.0;
+				if(!HistoryPos.empty()){
+
+					dHistoryX=Iter2->second->m_vHistoryPos.back().get()->rx();
+					dHistoryY=Iter2->second->m_vHistoryPos.back().get()->ry();
+				}
+
+				double dTempx=dCurX-dHistoryX;
+				double dTempy=dCurY-dHistoryY;
+
+				double root=sqrt(dTempx*dTempx+dTempy*dTempy);
+
+				//预计线角度更新
+				iAngle = (int)(asin(-dTempx/root)*(180/M_PI));
+				if (dTempy > 0)
+				{
+					iAngle = 180 - iAngle;
+				}
+				iAngle = (iAngle+360)%360;
 			}
-
-			double dTempx=dCurX-dHistoryX;
-			double dTempy=dCurY-dHistoryY;
-
-			double root=sqrt(dTempx*dTempx+dTempy*dTempy);
-
-			//预计线角度更新
-			iAngle = (int)(asin(-dTempx/root)*(180/M_PI));
-
-			if (dTempy > 0)
-			{
-				iAngle = 180 - iAngle;
-			}
-			iAngle = (iAngle+360)%360;
 		}
 	}
 	return iAngle;
-
 }
 
 void  NetDataDispenser::_CollisionDectect_Aux( int iTraceID1,int iTraceID2 )
@@ -169,7 +183,8 @@ void  NetDataDispenser::_CollisionDectect_Aux( int iTraceID1,int iTraceID2 )
    //判定两个航空器是否在冲突范围之内
    //固定其中一个点，找出另一个点的下一个坐标，计算机距离
 	hmFplTraces fplTraces;
-	theData::instance().GetAircraftTrace(fplTraces);
+	theData::instance().GetTotalAircraftTracePtr()->GetTraces(fplTraces);
+	//theData::instance().GetAircraftTrace(fplTraces);
 	hmFplTraces::iterator AircraftTrace1=fplTraces.find(iTraceID1);
 	hmFplTraces::iterator AircraftTrace2=fplTraces.find(iTraceID2);
     
@@ -221,13 +236,18 @@ void NetDataDispenser::_DisPenserTraceToClient()
 	if(!m_aircrftTraceToDispenserVec.empty()){
 
 		std::vector<int>::iterator Iter=m_aircrftTraceToDispenserVec.begin();
-		while(Iter++!=m_aircrftTraceToDispenserVec.end()){
+		while(Iter!=m_aircrftTraceToDispenserVec.end()){
 
 			std::vector<int>::iterator isFind=std::find(m_aircraftStopVec.begin(),m_aircraftStopVec.end(),*Iter);
-			if(isFind==m_aircraftStopVec.end())//需要停等
-			    continue;
+			if(isFind!=m_aircraftStopVec.end())//需要停等
+			{
+					++Iter;
+					continue;
+			}
+			   
 			std::deque<WPointF> TracePoint;
-			theData::instance().GetAircraftTracePoint1(*Iter,TracePoint);
+			theData::instance().GetTotalAircraftTracePtr()->GetAircraftTracePoint1(*Iter,TracePoint);
+			//theData::instance().GetAircraftTracePoint1(*Iter,TracePoint);
 			WPointF postion=TracePoint.front();
 			hmFplTraces::iterator traceIter=m_hmTrace.find(*Iter);
 			if(traceIter!=m_hmTrace.end()){
@@ -241,10 +261,18 @@ void NetDataDispenser::_DisPenserTraceToClient()
 				theApp::instance().GetNetManagerPtr()->GetNetProcessPtr()->SendAircraftTrace(*pTrace);
 				TracePoint.pop_front();//删除队头	
 			}//if
+			++Iter;
 
 		}//while
 		
 	}//if
 	m_aircraftStopVec.clear();
 }
+
+void NetDataDispenser::LoadData()
+{
+    DispenserTraceToClient();
+}
+
+
 

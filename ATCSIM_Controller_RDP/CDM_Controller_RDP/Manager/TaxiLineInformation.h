@@ -20,7 +20,7 @@ public:
 	void GetTaxiLineInformation();
 
 private:
-	void _GetTaxLineInformation(const QString& qFileName,std::map<QString,QStringList>& vMap);
+	void _GetTaxLineInformation(const QString& qFileName,std::multimap<QString,QStringList>& vMap,int flag);
 	
 };
 

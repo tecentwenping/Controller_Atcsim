@@ -95,6 +95,11 @@ private:
 	*变量：sGateName停机位名称，vecPathPoint存放起点到停机位所要经过的点的容器
 	**************************************************************************/
 	void GetPathPoint(const QString& sGateName,QStringList& PathPointList);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+	void GateAllocate_New(PublicDataStruct::GateInformationStruct& gateInformation);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+	void ConvertFlyPlanFromDBToTowerFlightPlan_Test(PublicDataStruct::SFlyPlanFromDB& source,
+													PublicDataStruct::TowerFlightPlanStruct& dest);
 	
 signals:
 	/*********************************************************

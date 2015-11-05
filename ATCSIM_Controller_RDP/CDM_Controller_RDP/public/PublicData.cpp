@@ -15,6 +15,8 @@ MapPathPoint			CPublicData::m_MapPathPoint;
 MapPath					CPublicData::m_MapInPath;
 MapPath					CPublicData::m_MapOutPath;
 std::vector<QString>	CPublicData::m_vecCurrentFlyPlan;
+//////////////////////////////////////////////////////////////////////
+VecGateInformation		CPublicData::m_vecGateInformation;
 #include "public/Coordinate.h"
 CPublicData::CPublicData()
 {
@@ -34,32 +36,44 @@ CPublicData::~CPublicData()
 
 }
 
-void CPublicData::GetGateInformation_T1( VecGateInformation& vecGateInforamtion )
+//void CPublicData::GetGateInformation_T1( VecGateInformation& vecGateInforamtion )
+//{
+//	vecGateInforamtion = m_VecGateInformation_T1;
+//}
+//
+//void CPublicData::GetGateInformation_T2( VecGateInformation& vecGateInformation )
+//{
+//	vecGateInformation = m_VecGateInformation_T2;
+//
+//}
+//VecGateInformation& CPublicData::GetGateInformation_T1()
+//{
+//	return m_VecGateInformation_T1;
+//}
+//VecGateInformation& CPublicData::GetGateInformaiton_T2()
+//{
+//	return m_VecGateInformation_T2;
+//
+//}
+//void CPublicData::SetGateInformation_T1( const VecGateInformation& VecGateInformation )
+//{
+//      m_VecGateInformation_T1 = VecGateInformation;
+//}
+//void CPublicData::SetGateInformation_T2( const VecGateInformation& VecGateInformation )
+//{
+//	m_VecGateInformation_T2 = VecGateInformation;
+//}
+void CPublicData::GetGateInformation_New(VecGateInformation& vecGateInformation)
 {
-	vecGateInforamtion = m_VecGateInformation_T1;
+    vecGateInformation=m_vecGateInformation;
 }
-
-void CPublicData::GetGateInformation_T2( VecGateInformation& vecGateInformation )
+VecGateInformation& CPublicData::GetGateInformation_New()
 {
-	vecGateInformation = m_VecGateInformation_T2;
-
+	return m_vecGateInformation;
 }
-VecGateInformation& CPublicData::GetGateInformation_T1()
+void CPublicData::SetGateInformation_New(const VecGateInformation& vecGateInformation)
 {
-	return m_VecGateInformation_T1;
-}
-VecGateInformation& CPublicData::GetGateInformaiton_T2()
-{
-	return m_VecGateInformation_T2;
-
-}
-void CPublicData::SetGateInformation_T1( const VecGateInformation& VecGateInformation )
-{
-      m_VecGateInformation_T1 = VecGateInformation;
-}
-void CPublicData::SetGateInformation_T2( const VecGateInformation& VecGateInformation )
-{
-	m_VecGateInformation_T2 = VecGateInformation;
+      m_vecGateInformation=vecGateInformation;
 }
 void CPublicData::SetGateName( const MapGateName& mapGateName )
 {
@@ -147,6 +161,7 @@ void CPublicData::GetPathInformation( MapPath& mapPath,int flag )
 		break;
 	case  2:
 		mapPath = m_MapOutPath;
+		break;
 	}
 
 }

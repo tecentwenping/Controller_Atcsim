@@ -21,7 +21,7 @@ public:
 	CFile();
 	virtual ~CFile();
 public:
-	virtual void ReadInformationFromFile();
+	virtual void ReadGateInformation();
 protected:
 	/**************************************************************************
 	*º¯ÊýÃû£ºGetInfoFromFile
